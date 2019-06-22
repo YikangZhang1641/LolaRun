@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CourierClient</string>
+    <string name="location_enabled_notif">We are tracking your current location. Tap to cancel.</string>
+    <string name="test_email">test@test.com</string>
+    <string name="test_password">testing</string>
+    <string name="firebase_path">package-9c2b0</string>
+</resources>
