@@ -5,9 +5,12 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-function InputAddress() {
+function InputAddress(props) {
   return(
     <div style={{ marginBottom: '3rem' }}>
+      <Typography variant="h6" align='left'>
+        {props.title}
+      </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -89,14 +92,8 @@ function InputAddress() {
 export default function AddressForm() {
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
-        From
-      </Typography>
-      <InputAddress />
-      <Typography variant="h6" gutterBottom>
-        To
-      </Typography>
-      <InputAddress />
+      <InputAddress title="From"/>
+      <InputAddress title="To"/>
     </React.Fragment>
   );
 }

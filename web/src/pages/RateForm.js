@@ -8,9 +8,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 export default function RateForm() {
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
-        Payment method
-      </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <TextField required id="cardName" label="Name on card" fullWidth />
