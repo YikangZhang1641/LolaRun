@@ -6,6 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 function InputAddress(props) {
+  const { address, updateAddress, isFrom } = props;
   return(
     <div style={{ marginBottom: '3rem' }}>
       <Typography variant="h6" align='left'>
@@ -19,7 +20,10 @@ function InputAddress(props) {
             name="firstName"
             label="First name"
             fullWidth
-            autoComplete="fname"
+            value={address.firstName}
+            onChange={(event) => {
+              updateAddress(isFrom, { firstName: event.target.value });
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -29,7 +33,9 @@ function InputAddress(props) {
             name="lastName"
             label="Last name"
             fullWidth
-            autoComplete="lname"
+            onChange={(event) => {
+              updateAddress(isFrom, { lastName: event.target.value });
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -39,16 +45,9 @@ function InputAddress(props) {
             name="address1"
             label="Address line 1"
             fullWidth
-            autoComplete="billing address-line1"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            id="address2"
-            name="address2"
-            label="Address line 2"
-            fullWidth
-            autoComplete="billing address-line2"
+            onChange={(event) => {
+              updateAddress(isFrom, { addressLine1: event.target.value });
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -58,11 +57,21 @@ function InputAddress(props) {
             name="city"
             label="City"
             fullWidth
-            autoComplete="billing address-level2"
+            onChange={(event) => {
+              updateAddress(isFrom, { city: event.target.value });
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField id="state" name="state" label="State/Province/Region" fullWidth />
+          <TextField
+            id="state"
+            name="state"
+            label="State/Province/Region"
+            fullWidth
+            onChange={(event) => {
+              updateAddress(isFrom, { state: event.target.value });
+            }}
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -71,7 +80,9 @@ function InputAddress(props) {
             name="zip"
             label="Zip / Postal code"
             fullWidth
-            autoComplete="billing postal-code"
+            onChange={(event) => {
+              updateAddress(isFrom, { zipCode: event.target.value });
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -81,7 +92,9 @@ function InputAddress(props) {
             name="country"
             label="Country"
             fullWidth
-            autoComplete="billing country"
+            onChange={(event) => {
+              updateAddress(isFrom, { country: event.target.value });
+            }}
           />
         </Grid>
       </Grid>
@@ -89,11 +102,12 @@ function InputAddress(props) {
   );
 }
 
-export default function AddressForm() {
+export default function AddressForm(props) {
+  const { fromAddress, toAddress, updateAddress } = props;
   return (
     <React.Fragment>
-      <InputAddress title="From"/>
-      <InputAddress title="To"/>
+      <InputAddress title="From" address={fromAddress} updateAddress={updateAddress} isFrom={true} />
+      <InputAddress title="To" address={toAddress} updateAddress={updateAddress} />
     </React.Fragment>
   );
 }

@@ -13,7 +13,9 @@ import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => {
+  console.log(theme);
+  return {
   '@global': {
     body: {
       backgroundColor: theme.palette.common.white,
@@ -49,7 +51,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center",
     fontSize:"20px",
   },
-}));
+};});
 
 const tiers = [
   {
@@ -73,7 +75,8 @@ const infos = [
   { title: 'To', address: ['555 Palo Verde Rd', 'San Francisco', 'CA', '94402', 'USA'], name:'John Smith'},
 ];
 
-export default function RateForm() {
+export default function RateForm(props) {
+  const { selectedOrderID, setSelectedOrderID } = props;
   const classes = useStyles();
 
   return (
@@ -91,13 +94,12 @@ export default function RateForm() {
           </Grid>
         ))}
       </Container>
-      {/* End hero unit */}
       <Container maxWidth="md" component="main" className={classes.main}>
         <Grid container spacing={5} >
           {tiers.map(tier => (
             <Grid item key={tier.orderId} xs={12} sm={6} md={6}>
               <Card onClick={() => {
-                // TODO (yulin: comeback and provide select shipping method callback)
+                setSelectedOrderID(tier.orderId);
               }}>
                 <CardActionArea>
                   <CardHeader
@@ -110,15 +112,27 @@ export default function RateForm() {
                   <CardContent>
                     <ul>
                       {tier.description.map(line => (
-                        <Typography key={tier.orderId} component="li" variant="subtitle1" align="center" key={line}>
+                        <Typography
+                          key={tier.orderId}
+                          component="li"
+                          variant="subtitle1"
+                          align="center"
+                          key={line}
+                        >
                           {line}
                         </Typography>
                       ))}
                     </ul>
                   </CardContent>
-                    <Button fullWidth variant="contained" color="primary" size="large" className={classes.cardButton}>
+                  <Button
+                    fullWidth
+                    variant={tier.orderId === selectedOrderID ? 'contained' : 'outlined'}
+                    color="primary"
+                    size="large"
+                    className={classes.cardButton}
+                  >
                       ${tier.price}
-                    </Button>
+                  </Button>
                 </CardActionArea>
               </Card>
             </Grid>
