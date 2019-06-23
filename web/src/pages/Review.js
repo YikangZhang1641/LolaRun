@@ -33,9 +33,14 @@ export default function Review() {
       </Typography>
       <List disablePadding>
         {infos.map(info => (
-          <ListItem className={classes.listItem} key={info.title}>
-            <ListItemText primary={info.title + ': ' + info.address.join(', ')} secondary={info.name}/>
-          </ListItem>
+          <Grid>
+            <Typography variant="subtitle1" align="left" color="textSecondary" component="p">
+              {info.title + ': ' + info.name}
+            </Typography>
+            <Typography variant="subtitle1" align="left" color="textPrimary" component="p">
+              {info.address.join(', ')}
+            </Typography>
+          </Grid>
         ))}
         <ListItem className={classes.listItem}>
           <ListItemText primary="Total" secondary="Estimated Arrival: 2019/06/30 15:00"/>

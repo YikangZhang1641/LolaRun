@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box'
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -31,6 +32,9 @@ const useStyles = makeStyles(theme => ({
   heroContent: {
     padding: theme.spacing(3, 0, 10),
   },
+  main: {
+    padding: theme.spacing(0, 0, 10),
+  },
   cardHeader: {
     backgroundColor: theme.palette.grey[200],
   },
@@ -52,14 +56,14 @@ const tiers = [
     orderId: "123",
     title: 'Drone',
     subheader:'Super-Fast',
-    description: ['some description...', 'Estimated Arrival: 2019/07/01 15:30'],
+    description: ['some description...', 'delivered by: 2019/07/01 15:30'],
     price:'15.32',
   },
   {
     orderId: "456",
     title: 'Robot',
     subheader:'Fast',
-    description: ['some description too', 'Estimated Arrival: 2019/07/01 10:30'],
+    description: ['some description too', 'delivered by: 2019/07/01 10:30'],
     price:'7.15',
   },
 ];
@@ -77,18 +81,18 @@ export default function RateForm() {
       <CssBaseline />
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
         {infos.map(info => (
-          <Grid>
-            <Typography variant="h6" align="center" color="textSecondary" component="p">
+          <Grid key={info.title}>
+            <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
               {info.title + ': ' + info.name}
             </Typography>
-            <Typography variant="h7" align="center" color="textSecondary" component="p">
+            <Typography variant="subtitle1" align="center" color="textPrimary" component="p">
               {info.address.join(', ')}
             </Typography>
           </Grid>
         ))}
       </Container>
       {/* End hero unit */}
-      <Container maxWidth="md" component="main">
+      <Container maxWidth="md" component="main" className={classes.main}>
         <Grid container spacing={5} >
           {tiers.map(tier => (
             <Grid item key={tier.orderId} xs={12} sm={6} md={6}>
@@ -106,17 +110,15 @@ export default function RateForm() {
                   <CardContent>
                     <ul>
                       {tier.description.map(line => (
-                        <Typography component="li" variant="subtitle1" align="center" key={line}>
+                        <Typography key={tier.orderId} component="li" variant="subtitle1" align="center" key={line}>
                           {line}
                         </Typography>
                       ))}
                     </ul>
                   </CardContent>
-                  <CardActions>
                     <Button fullWidth variant="contained" color="primary" size="large" className={classes.cardButton}>
                       ${tier.price}
                     </Button>
-                  </CardActions>
                 </CardActionArea>
               </Card>
             </Grid>
