@@ -1,5 +1,4 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -8,25 +7,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import CardMedia from '@material-ui/core/CardMedia';
 
-function MadeWithLove() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Built with love by the '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Material-UI
-      </Link>
-      {' team.'}
-    </Typography>
-  );
-}
 const useStyles = makeStyles(theme => ({
   '@global': {
     body: {
@@ -44,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1, 1.5),
   },
   heroContent: {
-    padding: theme.spacing(0, 0, 6),
+    padding: theme.spacing(3, 0, 10),
   },
   cardHeader: {
     backgroundColor: theme.palette.grey[200],
@@ -57,7 +42,8 @@ const useStyles = makeStyles(theme => ({
   },
   cardButton: {
     display: "block",
-    textAlign: "initial"
+    textAlign: "center",
+    fontSize:"20px",
   },
 }));
 
@@ -65,17 +51,22 @@ const tiers = [
   {
     orderId: "123",
     title: 'Drone',
-    description: ['Super-Fast', '2019/07/01 15:30'],
-    buttonText: '15',
-    price:'15',
+    subheader:'Super-Fast',
+    description: ['some description...', 'Estimated Arrival: 2019/07/01 15:30'],
+    price:'15.32',
   },
   {
     orderId: "456",
     title: 'Robot',
-    description: ['Fast', '2019/07/01 10:30'],
-    buttonText: '7',
-    price:'7',
+    subheader:'Fast',
+    description: ['some description too', 'Estimated Arrival: 2019/07/01 10:30'],
+    price:'7.15',
   },
+];
+
+const infos = [
+  { title: 'From', address: ['1 Material-UI Drive', 'Reactville', 'Anytown', '99999', 'USA'], name: 'Lillian Wood'},
+  { title: 'To', address: ['555 Palo Verde Rd', 'San Francisco', 'CA', '94402', 'USA'], name:'John Smith'},
 ];
 
 export default function RateForm() {
@@ -84,27 +75,30 @@ export default function RateForm() {
   return (
     <React.Fragment>
       <CssBaseline />
-      {/* Hero unit */}
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
-        <Typography variant="h7" align="left" color="textSecondary" component="p">
-          <p>From: Lillian Wood</p>
-          <p>555 Palo Verde Rd, San Francisco, CA</p>
-          <p>To: John Smith</p>
-          <p>100 3rd Ave Apt 505, San Francisco, CA</p>
-        </Typography>
+        {infos.map(info => (
+          <Grid>
+            <Typography variant="h6" align="center" color="textSecondary" component="p">
+              {info.title + ': ' + info.name}
+            </Typography>
+            <Typography variant="h7" align="center" color="textSecondary" component="p">
+              {info.address.join(', ')}
+            </Typography>
+          </Grid>
+        ))}
       </Container>
       {/* End hero unit */}
       <Container maxWidth="md" component="main">
         <Grid container spacing={5} >
           {tiers.map(tier => (
-            // Enterprise card is full width at sm breakpoint
-            <Grid item key={tier.orderId} xs={12} sm={tier.title === 'Enterprise' ? 12 : 6} md={12}>
+            <Grid item key={tier.orderId} xs={12} sm={6} md={6}>
               <Card onClick={() => {
                 // TODO (yulin: comeback and provide select shipping method callback)
               }}>
                 <CardActionArea>
                   <CardHeader
                     title={tier.title}
+                    subheader={tier.subheader}
                     titleTypographyProps={{ align: 'center' }}
                     subheaderTypographyProps={{ align: 'center' }}
                     className={classes.cardHeader}
@@ -119,7 +113,7 @@ export default function RateForm() {
                     </ul>
                   </CardContent>
                   <CardActions>
-                    <Button fullWidth variant="contained" color="primary">
+                    <Button fullWidth variant="contained" color="primary" size="large" className={classes.cardButton}>
                       ${tier.price}
                     </Button>
                   </CardActions>
