@@ -65,41 +65,42 @@ const useStyles = theme => ({
 
 const steps = ['Shipping address', 'Show Rates', 'Review your order'];
 
-function getStepContent(step, props) {
-  const {
-    fromAddress,
-    toAddress,
-    updateAddress,
-    selectedOrderID,
-    setSelectedOrderID,
-  } = props;
-  switch (step) {
-    case 0:
-      return (
-        <AddressForm
-          fromAddress={fromAddress}
-          toAddress={toAddress}
-          updateAddress={updateAddress}
-        />
-      );
-    case 1:
-      return (
-        <RateForm
-          selectedOrderID={selectedOrderID}
-          setSelectedOrderID={setSelectedOrderID}
-        />
-      );
-    case 2:
-      return <Review />;
-    default:
-      throw new Error('Unknown step');
-  }
-}
-
 class Checkout extends React.Component {
   state = {
     activeStep: 0,
   };
+
+  renderContent() {
+    const {
+      fromAddress,
+      toAddress,
+      updateAddress,
+      selectedOrderID,
+      setSelectedOrderID,
+    } = this.props;
+    const { activeStep } = this.state;
+    switch (activeStep) {
+      case 0:
+        return (
+          <AddressForm
+            fromAddress={fromAddress}
+            toAddress={toAddress}
+            updateAddress={updateAddress}
+          />
+        );
+      case 1:
+        return (
+          <RateForm
+            selectedOrderID={selectedOrderID}
+            setSelectedOrderID={setSelectedOrderID}
+          />
+        );
+      case 2:
+        return <Review />;
+      default:
+        throw new Error('Unknown step');
+    }
+  }
 
   handleNext = () => {
     switch (this.state.activeStep) {
@@ -126,6 +127,7 @@ class Checkout extends React.Component {
       fromAddress,
       toAddress,
     } = this.props;
+    const { activeStep } = this.state;
 
     let isNextButtonDisabled = false;
     switch (activeStep) {
@@ -187,7 +189,7 @@ class Checkout extends React.Component {
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  {getStepContent(activeStep, this.props)}
+                  {this.renderContent()}
                   <div className={classes.buttons}>
                     {this.state.activeStep !== 0 && (
                       <Button onClick={this.handleBack} className={classes.button}>
