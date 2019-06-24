@@ -5,11 +5,11 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-export default function AddressForm() {
-  return (
-    <React.Fragment>
-      <Typography variant="h6" gutterBottom>
-        Shipping address
+function InputAddress(props) {
+  return(
+    <div style={{ marginBottom: '3rem' }}>
+      <Typography variant="h6" align='left'>
+        {props.title}
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
@@ -84,13 +84,16 @@ export default function AddressForm() {
             autoComplete="billing country"
           />
         </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
-            label="Use this address for payment details"
-          />
-        </Grid>
       </Grid>
+    </div>
+  );
+}
+
+export default function AddressForm() {
+  return (
+    <React.Fragment>
+      <InputAddress title="From"/>
+      <InputAddress title="To"/>
     </React.Fragment>
   );
 }

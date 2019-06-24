@@ -6,24 +6,14 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 
-const products = [
-  { name: 'Product 1', desc: 'A nice thing', price: '$9.99' },
-  { name: 'Product 2', desc: 'Another thing', price: '$3.45' },
-  { name: 'Product 3', desc: 'Something else', price: '$6.51' },
-  { name: 'Product 4', desc: 'Best thing of all', price: '$14.11' },
-  { name: 'Shipping', desc: '', price: 'Free' },
-];
-const addresses = ['1 Material-UI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
-const payments = [
-  { name: 'Card type', detail: 'Visa' },
-  { name: 'Card holder', detail: 'Mr John Smith' },
-  { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-  { name: 'Expiry date', detail: '04/2024' },
+const infos = [
+  { title: 'From', address: ['1 Material-UI Drive', 'Reactville', 'Anytown', '99999', 'USA'], name: 'Lillian Wood'},
+  { title: 'To', address: ['555 Palo Verde Rd', 'San Francisco', 'CA', '94402', 'USA'], name:'John Smith'},
 ];
 
 const useStyles = makeStyles(theme => ({
   listItem: {
-    padding: theme.spacing(1, 0),
+    padding: theme.spacing(0, 0),
   },
   total: {
     fontWeight: '700',
@@ -42,45 +32,23 @@ export default function Review() {
         Order summary
       </Typography>
       <List disablePadding>
-        {products.map(product => (
-          <ListItem className={classes.listItem} key={product.name}>
-            <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
-          </ListItem>
+        {infos.map(info => (
+          <Grid>
+            <Typography variant="subtitle1" align="left" color="textSecondary" component="p">
+              {info.title + ': ' + info.name}
+            </Typography>
+            <Typography variant="subtitle1" align="left" color="textPrimary" component="p">
+              {info.address.join(', ')}
+            </Typography>
+          </Grid>
         ))}
         <ListItem className={classes.listItem}>
-          <ListItemText primary="Total" />
+          <ListItemText primary="Total" secondary="Estimated Arrival: 2019/06/30 15:00"/>
           <Typography variant="subtitle1" className={classes.total}>
-            $34.06
+            $15.00
           </Typography>
         </ListItem>
       </List>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom className={classes.title}>
-            Shipping
-          </Typography>
-          <Typography gutterBottom>John Smith</Typography>
-          <Typography gutterBottom>{addresses.join(', ')}</Typography>
-        </Grid>
-        <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom className={classes.title}>
-            Payment details
-          </Typography>
-          <Grid container>
-            {payments.map(payment => (
-              <React.Fragment key={payment.name}>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.name}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.detail}</Typography>
-                </Grid>
-              </React.Fragment>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
     </React.Fragment>
   );
 }

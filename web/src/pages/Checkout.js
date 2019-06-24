@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import AddressForm from './AddressForm';
-import PaymentForm from './PaymentForm';
+import RateForm from './RateForm';
 import Review from './Review';
 
 function MadeWithLove() {
@@ -26,7 +26,7 @@ function MadeWithLove() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
   appBar: {
     position: 'relative',
   },
@@ -61,16 +61,16 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
   },
-}));
+});
 
-const steps = ['Shipping address', 'Payment details', 'Review your order'];
+const steps = ['Shipping address', 'Show Rates', 'Review your order'];
 
 function getStepContent(step) {
   switch (step) {
     case 0:
       return <AddressForm />;
     case 1:
-      return <PaymentForm />;
+      return <RateForm />;
     case 2:
       return <Review />;
     default:
@@ -78,18 +78,16 @@ function getStepContent(step) {
   }
 }
 
-export default function Checkout() {
-  const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+class Checkout extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeStep: 0
+    }
+  }
 
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep(activeStep - 1);
-  };
-
+  render() {
+  const { classes } = this.props;
   return (
     <React.Fragment>
       <CssBaseline />
@@ -103,9 +101,9 @@ export default function Checkout() {
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
-            Checkout
+            Rate & Ship
           </Typography>
-          <Stepper activeStep={activeStep} className={classes.stepper}>
+          <Stepper activeStep={this.state.activeStep} className={classes.stepper}>
             {steps.map(label => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
@@ -113,7 +111,7 @@ export default function Checkout() {
             ))}
           </Stepper>
           <React.Fragment>
-            {activeStep === steps.length ? (
+            {this.state.activeStep === steps.length ? (
               <React.Fragment>
                 <Typography variant="h5" gutterBottom>
                   Thank you for your order.
@@ -125,20 +123,20 @@ export default function Checkout() {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep)}
+                {getStepContent(this.state.activeStep)}
                 <div className={classes.buttons}>
-                  {activeStep !== 0 && (
-                    <Button onClick={handleBack} className={classes.button}>
+                  {this.state.activeStep !== 0 && (
+                    <Button onClick={() => this.setState({ activeStep: this.state.activeStep - 1 })} className={classes.button}>
                       Back
                     </Button>
                   )}
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={handleNext}
+                    onClick={() => this.setState({ activeStep: this.state.activeStep + 1 })}
                     className={classes.button}
                   >
-                    {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                    {this.state.activeStep === steps.length - 1 ? 'Place order' : 'Next'}
                   </Button>
                 </div>
               </React.Fragment>
@@ -149,4 +147,7 @@ export default function Checkout() {
       </main>
     </React.Fragment>
   );
+  }
 }
+
+export default withStyles(useStyles)(Checkout);
