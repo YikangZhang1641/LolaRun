@@ -33,7 +33,7 @@ export default function Review() {
       </Typography>
       <List disablePadding>
         {infos.map(info => (
-          <Grid>
+          <Grid key={info.title}>
             <Typography variant="subtitle1" align="left" color="textSecondary" component="p">
               {info.title + ': ' + info.name}
             </Typography>

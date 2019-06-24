@@ -65,88 +65,155 @@ const useStyles = theme => ({
 
 const steps = ['Shipping address', 'Show Rates', 'Review your order'];
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <RateForm />;
-    case 2:
-      return <Review />;
-    default:
-      throw new Error('Unknown step');
-  }
-}
-
 class Checkout extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeStep: 0
+  state = {
+    activeStep: 0,
+  };
+
+  renderContent() {
+    const {
+      fromAddress,
+      toAddress,
+      updateAddress,
+      selectedOrderID,
+      setSelectedOrderID,
+    } = this.props;
+    const { activeStep } = this.state;
+    switch (activeStep) {
+      case 0:
+        return (
+          <AddressForm
+            fromAddress={fromAddress}
+            toAddress={toAddress}
+            updateAddress={updateAddress}
+          />
+        );
+      case 1:
+        return (
+          <RateForm
+            selectedOrderID={selectedOrderID}
+            setSelectedOrderID={setSelectedOrderID}
+          />
+        );
+      case 2:
+        return <Review />;
+      default:
+        throw new Error('Unknown step');
     }
   }
 
+  handleNext = () => {
+    switch (this.state.activeStep) {
+      case 0:
+        // TODO: Make API call to get quote
+        break;
+      case 2:
+        // TODO: Make API call to place order
+        break;
+      default:
+    }
+    this.setState(prevState => ({ activeStep: prevState.activeStep + 1}));
+  }
+
+  handleBack = () => {
+    this.setState(prevState => ({ activeStep: prevState.activeStep - 1}));
+  }
+
   render() {
-  const { classes } = this.props;
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <AppBar position="absolute" color="default" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            Company name
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <main className={classes.layout}>
-        <Paper className={classes.paper}>
-          <Typography component="h1" variant="h4" align="center">
-            Rate & Ship
-          </Typography>
-          <Stepper activeStep={this.state.activeStep} className={classes.stepper}>
-            {steps.map(label => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <React.Fragment>
-            {this.state.activeStep === steps.length ? (
-              <React.Fragment>
-                <Typography variant="h5" gutterBottom>
-                  Thank you for your order.
-                </Typography>
-                <Typography variant="subtitle1">
-                  Your order number is #2001539. We have emailed your order confirmation, and will
-                  send you an update when your order has shipped.
-                </Typography>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                {getStepContent(this.state.activeStep)}
-                <div className={classes.buttons}>
-                  {this.state.activeStep !== 0 && (
-                    <Button onClick={() => this.setState({ activeStep: this.state.activeStep - 1 })} className={classes.button}>
-                      Back
+    const {
+      classes,
+      selectedOrderID,
+      setSelectedOrderID,
+      fromAddress,
+      toAddress,
+    } = this.props;
+    const { activeStep } = this.state;
+
+    let isNextButtonDisabled = false;
+    switch (activeStep) {
+      case 0:
+        if (
+          false
+          /*
+          fromAddress.addressLine1 === '' ||
+          fromAddress.zipCode === '' ||
+          fromAddress.city === '' ||
+          toAddress.addressLine1 === '' ||
+          toAddress.zipCode === '' ||
+          toAddress.city === ''
+          */
+        ) {
+          isNextButtonDisabled = true;
+        }
+        break;
+      case 1:
+        if (selectedOrderID === null) {
+          isNextButtonDisabled = true;
+        }
+        break;
+      default:
+    }
+
+    return (
+      <React.Fragment>
+        <CssBaseline />
+        <AppBar position="absolute" color="default" className={classes.appBar}>
+          <Toolbar>
+            <Typography variant="h6" color="inherit" noWrap>
+              Company name
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <main className={classes.layout}>
+          <Paper className={classes.paper}>
+            <Typography component="h1" variant="h4" align="center">
+              Rate & Ship
+            </Typography>
+            <Stepper activeStep={this.state.activeStep} className={classes.stepper}>
+              {steps.map(label => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <React.Fragment>
+              {this.state.activeStep === steps.length ? (
+                <React.Fragment>
+                  <Typography variant="h5" gutterBottom>
+                    Thank you for your order.
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    Your order number is #2001539. We have emailed your order confirmation, and will
+                    send you an update when your order has shipped.
+                  </Typography>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  {this.renderContent()}
+                  <div className={classes.buttons}>
+                    {this.state.activeStep !== 0 && (
+                      <Button onClick={this.handleBack} className={classes.button}>
+                        Back
+                      </Button>
+                    )}
+                    <Button
+                      disabled={isNextButtonDisabled}
+                      variant="contained"
+                      color="primary"
+                      onClick={this.handleNext}
+                      className={classes.button}
+                    >
+                      {this.state.activeStep === steps.length - 1 ? 'Place order' : 'Next'}
                     </Button>
-                  )}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => this.setState({ activeStep: this.state.activeStep + 1 })}
-                    className={classes.button}
-                  >
-                    {this.state.activeStep === steps.length - 1 ? 'Place order' : 'Next'}
-                  </Button>
-                </div>
-              </React.Fragment>
-            )}
-          </React.Fragment>
-        </Paper>
-        <MadeWithLove />
-      </main>
-    </React.Fragment>
-  );
+                  </div>
+                </React.Fragment>
+              )}
+            </React.Fragment>
+          </Paper>
+          <MadeWithLove />
+        </main>
+      </React.Fragment>
+    );
   }
 }
 
