@@ -106,8 +106,17 @@ export default function AddressForm(props) {
   const { fromAddress, toAddress, updateAddress } = props;
   return (
     <React.Fragment>
-      <InputAddress title="From" address={fromAddress} updateAddress={updateAddress} isFrom={true} />
-      <InputAddress title="To" address={toAddress} updateAddress={updateAddress} />
+      <InputAddress
+        title="From"
+        address={fromAddress}
+        updateAddress={updateAddress}
+        isFrom={true}
+      />
+      <InputAddress
+        title="To"
+        address={toAddress}
+        updateAddress={updateAddress}
+      />
     </React.Fragment>
   );
 }
