@@ -28,7 +28,6 @@ function InputAddress(props) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            required
             id="lastName"
             name="lastName"
             label="Last name"
@@ -67,6 +66,7 @@ function InputAddress(props) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
+            required
             id="state"
             name="state"
             label="State/Province/Region"
@@ -79,7 +79,6 @@ function InputAddress(props) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            required
             id="zip"
             name="zip"
             label="Zip / Postal code"
@@ -92,7 +91,6 @@ function InputAddress(props) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            required
             id="country"
             name="country"
             label="Country"

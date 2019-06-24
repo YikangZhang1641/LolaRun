@@ -14,17 +14,7 @@ import AddressForm from './AddressForm';
 import RateForm from './RateForm';
 import Review from './Review';
 
-function MadeWithLove() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Built with love by the '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Material-UI
-      </Link>
-      {' team.'}
-    </Typography>
-  );
-}
+const companyName = 'LOLARun'
 
 const useStyles = theme => ({
   appBar: {
@@ -63,49 +53,62 @@ const useStyles = theme => ({
   },
 });
 
+function MadeWithLove() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Built with love by the '}
+      <Link color="inherit" href="https://material-ui.com/">
+        {companyName}
+      </Link>
+      {' team.'}
+    </Typography>
+  );
+}
+
+function getDefaultAddress() {
+  return {
+    firstName: '',
+    lastName: '',
+    addressLine1: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: '',
+  };
+}
+
 const steps = ['Shipping address', 'Show Rates', 'Review your order'];
 
 class Checkout extends React.Component {
   state = {
+    selectedOrderID: null,
+    fromAddress: getDefaultAddress(),
+    toAddress: getDefaultAddress(),
     activeStep: 0,
   };
 
-  renderContent() {
-    const {
-      fromAddress,
-      toAddress,
-      updateAddress,
-      selectedOrderID,
-      setSelectedOrderID,
-    } = this.props;
-    const { activeStep } = this.state;
-    switch (activeStep) {
-      case 0:
-        return (
-          <AddressForm
-            fromAddress={fromAddress}
-            toAddress={toAddress}
-            updateAddress={updateAddress}
-          />
-        );
-      case 1:
-        return (
-          <RateForm
-            selectedOrderID={selectedOrderID}
-            setSelectedOrderID={setSelectedOrderID}
-            fromAddress={fromAddress}
-            toAddress={toAddress}
-          />
-        );
-      case 2:
-        return (
-          <Review
-            fromAddress={fromAddress}
-            toAddress={toAddress}
-          />
-        );
-      default:
-        throw new Error('Unknown step');
+  setSelectedOrderID = (orderID) => {
+    this.setState({
+      selectedOrderID: orderID,
+    });
+  }
+
+  updateAddress = (isFrom = false, update = {}) => {
+    const { fromAddress, toAddress } = this.state;
+    if (isFrom) {
+      this.setState({
+        fromAddress: {
+          ...fromAddress,
+          ...update,
+        },
+      });
+    } else {
+      this.setState({
+        toAddress: {
+          ...toAddress,
+          ...update,
+        },
+      });
     }
   }
 
@@ -126,29 +129,63 @@ class Checkout extends React.Component {
     this.setState(prevState => ({ activeStep: prevState.activeStep - 1}));
   }
 
-  render() {
+  renderContent() {
     const {
-      classes,
-      selectedOrderID,
-      setSelectedOrderID,
       fromAddress,
       toAddress,
-    } = this.props;
-    const { activeStep } = this.state;
+      selectedOrderID,
+      activeStep
+    } = this.state;
+
+    switch (activeStep) {
+      case 0:
+        return (
+          <AddressForm
+            fromAddress={fromAddress}
+            toAddress={toAddress}
+            updateAddress={this.updateAddress}
+          />
+        );
+      case 1:
+        return (
+          <RateForm
+            selectedOrderID={selectedOrderID}
+            setSelectedOrderID={this.setSelectedOrderID}
+            fromAddress={fromAddress}
+            toAddress={toAddress}
+          />
+        );
+      case 2:
+        return (
+          <Review
+            fromAddress={fromAddress}
+            toAddress={toAddress}
+          />
+        );
+      default:
+        throw new Error('Unknown step');
+    }
+  }
+
+  render() {
+    const { classes } = this.props;
+    const {
+      selectedOrderID,
+      fromAddress,
+      toAddress,
+      activeStep
+    } = this.state;
 
     let isNextButtonDisabled = false;
     switch (activeStep) {
       case 0:
         if (
-          false
-          /*
+          fromAddress.firstName === '' ||
           fromAddress.addressLine1 === '' ||
-          fromAddress.zipCode === '' ||
           fromAddress.city === '' ||
+          toAddress.firstName === '' ||
           toAddress.addressLine1 === '' ||
-          toAddress.zipCode === '' ||
           toAddress.city === ''
-          */
         ) {
           isNextButtonDisabled = true;
         }
@@ -166,8 +203,8 @@ class Checkout extends React.Component {
         <CssBaseline />
         <AppBar position="absolute" color="default" className={classes.appBar}>
           <Toolbar>
-            <Typography variant="h6" color="inherit" noWrap>
-              Company name
+            <Typography variant="h5" color="inherit" noWrap>
+              {companyName}
             </Typography>
           </Toolbar>
         </AppBar>
@@ -176,7 +213,7 @@ class Checkout extends React.Component {
             <Typography component="h1" variant="h4" align="center">
               Rate & Ship
             </Typography>
-            <Stepper activeStep={this.state.activeStep} className={classes.stepper}>
+            <Stepper activeStep={activeStep} className={classes.stepper}>
               {steps.map(label => (
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
@@ -184,21 +221,21 @@ class Checkout extends React.Component {
               ))}
             </Stepper>
             <React.Fragment>
-              {this.state.activeStep === steps.length ? (
+              {activeStep === steps.length ? (
                 <React.Fragment>
                   <Typography variant="h5" gutterBottom>
                     Thank you for your order.
                   </Typography>
                   <Typography variant="subtitle1">
-                    Your order number is #2001539. We have emailed your order confirmation, and will
-                    send you an update when your order has shipped.
+                    Your tracking number is #2001539. Please use this tracking number to
+                    track your package status. Thank you for using our service!
                   </Typography>
                 </React.Fragment>
               ) : (
                 <React.Fragment>
                   {this.renderContent()}
                   <div className={classes.buttons}>
-                    {this.state.activeStep !== 0 && (
+                    {activeStep !== 0 && (
                       <Button onClick={this.handleBack} className={classes.button}>
                         Back
                       </Button>
@@ -210,7 +247,7 @@ class Checkout extends React.Component {
                       onClick={this.handleNext}
                       className={classes.button}
                     >
-                      {this.state.activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                      {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
                     </Button>
                   </div>
                 </React.Fragment>
