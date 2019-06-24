@@ -65,12 +65,30 @@ const useStyles = theme => ({
 
 const steps = ['Shipping address', 'Show Rates', 'Review your order'];
 
-function getStepContent(step) {
+function getStepContent(step, props) {
+  const {
+    fromAddress,
+    toAddress,
+    updateAddress,
+    selectedOrderID,
+    setSelectedOrderID,
+  } = props;
   switch (step) {
     case 0:
-      return <AddressForm />;
+      return (
+        <AddressForm
+          fromAddress={fromAddress}
+          toAddress={toAddress}
+          updateAddress={updateAddress}
+        />
+      );
     case 1:
-      return <RateForm />;
+      return (
+        <RateForm
+          selectedOrderID={selectedOrderID}
+          setSelectedOrderID={setSelectedOrderID}
+        />
+      );
     case 2:
       return <Review />;
     default:
@@ -78,16 +96,59 @@ function getStepContent(step) {
   }
 }
 
-class Checkout extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeStep: 0
+export default function Checkout(props) {
+  const {
+    selectedOrderID,
+    setSelectedOrderID,
+    fromAddress,
+    toAddress,
+  } = props;
+
+  const classes = useStyles();
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const handleNext = () => {
+    switch (activeStep) {
+      case 0:
+        // TODO: Make API call to get quote
+        break;
+      case 2:
+        // TODO: Make API call to place order
+        break;
+      default:
     }
+    setActiveStep(activeStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
+  };
+
+  let isNextButtonDisabled = false;
+  switch (activeStep) {
+    case 0:
+      if (
+        false
+        /*
+        fromAddress.addressLine1 === '' ||
+        fromAddress.zipCode === '' ||
+        fromAddress.city === '' ||
+        toAddress.addressLine1 === '' ||
+        toAddress.zipCode === '' ||
+        toAddress.city === ''
+        */
+      ) {
+        isNextButtonDisabled = true;
+      }
+      break;
+    case 1:
+      if (selectedOrderID === null) {
+        isNextButtonDisabled = true;
+      }
+      break;
+    default:
   }
 
-  render() {
-  const { classes } = this.props;
   return (
     <React.Fragment>
       <CssBaseline />
@@ -123,7 +184,7 @@ class Checkout extends React.Component {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                {getStepContent(this.state.activeStep)}
+                {getStepContent(activeStep, props)}
                 <div className={classes.buttons}>
                   {this.state.activeStep !== 0 && (
                     <Button onClick={() => this.setState({ activeStep: this.state.activeStep - 1 })} className={classes.button}>
@@ -131,6 +192,7 @@ class Checkout extends React.Component {
                     </Button>
                   )}
                   <Button
+                    disabled={isNextButtonDisabled}
                     variant="contained"
                     color="primary"
                     onClick={() => this.setState({ activeStep: this.state.activeStep + 1 })}
@@ -147,7 +209,7 @@ class Checkout extends React.Component {
       </main>
     </React.Fragment>
   );
-  }
 }
+
 
 export default withStyles(useStyles)(Checkout);
