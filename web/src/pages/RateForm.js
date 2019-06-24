@@ -70,29 +70,27 @@ const tiers = [
   },
 ];
 
-const infos = [
-  { title: 'From', address: ['1 Material-UI Drive', 'Reactville', 'Anytown', '99999', 'USA'], name: 'Lillian Wood'},
-  { title: 'To', address: ['555 Palo Verde Rd', 'San Francisco', 'CA', '94402', 'USA'], name:'John Smith'},
-];
 
 export default function RateForm(props) {
-  const { selectedOrderID, setSelectedOrderID } = props;
+  const { selectedOrderID, setSelectedOrderID, fromAddress, toAddress } = props;
+  const infos = [fromAddress, toAddress];
   const classes = useStyles();
 
   return (
     <React.Fragment>
       <CssBaseline />
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
-        {infos.map(info => (
-          <Grid key={info.title}>
-            <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-              {info.title + ': ' + info.name}
-            </Typography>
-            <Typography variant="subtitle1" align="center" color="textPrimary" component="p">
-              {info.address.join(', ')}
-            </Typography>
-          </Grid>
-        ))}
+        {infos.map((info, index) => {
+          return (
+            <Grid key={info.title}>
+              <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
+                {(index === 0 ? 'From' : 'To') + ': ' + info.firstName + ' ' + info.lastName}
+              </Typography>
+              <Typography variant="subtitle1" align="center" color="textPrimary" component="p">
+                {info.addressLine1 + ', ' + info.city + ', ' + info.state}
+              </Typography>
+            </Grid>
+          )})}
       </Container>
       <Container maxWidth="md" component="main" className={classes.main}>
         <Grid container spacing={5} >

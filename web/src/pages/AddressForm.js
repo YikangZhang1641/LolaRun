@@ -9,7 +9,7 @@ function InputAddress(props) {
   const { address, updateAddress, isFrom } = props;
   return(
     <div style={{ marginBottom: '3rem' }}>
-      <Typography variant="h6" align='left'>
+      <Typography variant="h6" align='center' color='textPrimary'>
         {props.title}
       </Typography>
       <Grid container spacing={3}>
@@ -33,6 +33,7 @@ function InputAddress(props) {
             name="lastName"
             label="Last name"
             fullWidth
+            value={address.lastName}
             onChange={(event) => {
               updateAddress(isFrom, { lastName: event.target.value });
             }}
@@ -45,6 +46,7 @@ function InputAddress(props) {
             name="address1"
             label="Address line 1"
             fullWidth
+            value={address.addressLine1}
             onChange={(event) => {
               updateAddress(isFrom, { addressLine1: event.target.value });
             }}
@@ -57,6 +59,7 @@ function InputAddress(props) {
             name="city"
             label="City"
             fullWidth
+            value={address.city}
             onChange={(event) => {
               updateAddress(isFrom, { city: event.target.value });
             }}
@@ -68,6 +71,7 @@ function InputAddress(props) {
             name="state"
             label="State/Province/Region"
             fullWidth
+            value={address.state}
             onChange={(event) => {
               updateAddress(isFrom, { state: event.target.value });
             }}
@@ -80,6 +84,7 @@ function InputAddress(props) {
             name="zip"
             label="Zip / Postal code"
             fullWidth
+            value={address.zipCode}
             onChange={(event) => {
               updateAddress(isFrom, { zipCode: event.target.value });
             }}
@@ -92,6 +97,7 @@ function InputAddress(props) {
             name="country"
             label="Country"
             fullWidth
+            value={address.country}
             onChange={(event) => {
               updateAddress(isFrom, { country: event.target.value });
             }}

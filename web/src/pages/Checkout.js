@@ -93,10 +93,17 @@ class Checkout extends React.Component {
           <RateForm
             selectedOrderID={selectedOrderID}
             setSelectedOrderID={setSelectedOrderID}
+            fromAddress={fromAddress}
+            toAddress={toAddress}
           />
         );
       case 2:
-        return <Review />;
+        return (
+          <Review
+            fromAddress={fromAddress}
+            toAddress={toAddress}
+          />
+        );
       default:
         throw new Error('Unknown step');
     }
