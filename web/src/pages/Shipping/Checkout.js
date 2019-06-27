@@ -10,6 +10,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
+import Availability from './Availability';
 import AddressForm from './AddressForm';
 import RateForm from './RateForm';
 import Review from './Review';
@@ -77,7 +78,7 @@ function getDefaultAddress() {
   };
 }
 
-const steps = ['Shipping address', 'Show Rates', 'Review your order'];
+const steps = ['Check availability', 'Shipping address', 'Show Rates', 'Review your order'];
 
 class Checkout extends React.Component {
   state = {
@@ -138,6 +139,10 @@ class Checkout extends React.Component {
     } = this.state;
 
     switch (activeStep) {
+      // case 0:
+      //   return (
+      //     <Availability/>
+      //   );
       case 0:
         return (
           <AddressForm

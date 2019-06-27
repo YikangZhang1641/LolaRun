@@ -1,14 +1,12 @@
 import React from 'react';
 import './App.css';
-import Checkout from './pages/Checkout';
-
-
+import Main from './pages/Main';
 class App extends React.Component {
 
   render() {
     return(
       <div className="App">
-        <Checkout />
+        <Main />
       </div>
     );
   }
