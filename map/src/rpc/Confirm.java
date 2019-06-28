@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,18 +43,26 @@ public class Confirm extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		}
 		
 		DBConnection connection = DBConnectionFactory.getConnection();
 	  	 try {
-	  		String user_id = request.getParameter("user_id");
-			String origin = request.getParameter("start_location");
-			String destination = request.getParameter("destination");
-			String vehicle = request.getParameter("vehicle");
+			JSONObject input = RpcHelper.readJSONObject(request);
+
+			String user_id = session.getAttribute("user_id").toString(); 
+//	  		String user_id = input.getString("user_id");
+	  		
+			String origin = input.getString("start_location");
+			String destination = input.getString("destination");
+			String vehicle = input.getString("vehicle");
 			
-			int distance = Integer.parseInt(request.getParameter("distance"));
-			int duration = Integer.parseInt(request.getParameter("duration"));
-			double price = Double.parseDouble(request.getParameter("price"));	  		 
+			int distance = Integer.parseInt(input.getString("distance"));
+			int duration = Integer.parseInt(input.getString("duration"));
+			double price = Double.parseDouble(input.getString("price"));	  		 
 	  		
 			OrderBuilder builder = new OrderBuilder();
 			builder.setUserID(user_id);
@@ -73,9 +82,5 @@ public class Confirm extends HttpServlet {
 	  	 } finally {
 	  		 connection.close();
 	  	 }
-
-		
-		
 	}
-
 }

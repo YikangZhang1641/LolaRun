@@ -13,4 +13,8 @@ public interface DBConnection {
 	public List<Route> searchRoutes(String origin, String destination);
 
 	void saveOrder(Order order);
+
+	boolean registerUser(String userId, String password, String firstname, String lastname);
+
+	String getFullname(String userId);
 }
