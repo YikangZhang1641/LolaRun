@@ -11,8 +11,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,13 +91,16 @@ public class GoogleMapAPI {
 					rb.setDestAddr(obj.getJSONArray("destination_addresses").getString(0));
 					
 					if (!element.isNull("duration")) {
-						rb.setDuration(element.getJSONObject("duration").getInt("value"));
+						rb.setDurationText(element.getJSONObject("duration").getString("text"));
+						rb.setDurationValue(element.getJSONObject("duration").getInt("value"));
 					}
 					if (!element.isNull("distance") ) {
-						rb.setDistance(element.getJSONObject("distance").getInt("value"));
+						rb.setDistanceText(element.getJSONObject("distance").getString("text"));
+						rb.setDistanceValue(element.getJSONObject("distance").getInt("value"));
 					}
 					if (!element.isNull("duration_in_traffic")) {
-						rb.setTrafficDuration(element.getJSONObject("duration_in_traffic").getInt("value"));
+						rb.setTrafficDurationText(element.getJSONObject("duration_in_traffic").getString("text"));
+						rb.setTrafficDurationValue(element.getJSONObject("duration_in_traffic").getInt("value"));
 					}
 					routeList.add(rb.build());
 				}
