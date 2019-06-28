@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +14,7 @@ import java.util.Set;
 import db.DBConnection;
 import entity.Order;
 import entity.Route;
+import entity.Order.OrderBuilder;
 import external.GoogleMapAPI;
 
 public class MySQLConnection implements DBConnection {
@@ -58,21 +61,23 @@ public class MySQLConnection implements DBConnection {
 		}
 		
 		 try {
-	  		 String sql = "INSERT IGNORE INTO items VALUES (?, ?, ?, ?, ?, ?, ?)";
+	  		 String sql = "INSERT IGNORE INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
 	  		 PreparedStatement ps = conn.prepareStatement(sql);
-//	  		 ps.setString(1, item.getItemId());
-//	  		 ps.setString(2, item.getName());
-//	  		 ps.setDouble(3, item.getRating());
-//	  		 ps.setString(4, item.getAddress());
-//	  		 ps.setString(5, item.getImageUrl());
-//	  		 ps.setString(6, item.getUrl());
-//	  		 ps.setDouble(7, item.getDistance());
-//	  		 ps.execute();
+	  		 ps.setString(1, order.getUserID());
+//	  		 ps.setString(2, order.getName());
+	  		 ps.setString(2, order.getOriginAddr());
+	  		 ps.setString(3, order.getDestAddr());
+	  		 ps.setInt(4, order.getDistanceValue());
+	  		 ps.setInt(5, order.getDurationValue());
+	  		 ps.setString(6, order.getVehicle());
+	  		 ps.setDouble(7, order.getPrice());
+//	  		 ps.setNull(8, Types.INTEGER);;
+	  		 ps.execute();
 //	  		
 //	  		 sql = "INSERT IGNORE INTO categories VALUES(?, ?)";
 //	  		 ps = conn.prepareStatement(sql);
-//	  		 ps.setString(1, item.getItemId());
-//	  		 for(String category : item.getCategories()) {
+//	  		 ps.setString(1, order.getorderId());
+//	  		 for(String category : order.getCategories()) {
 //	  			 ps.setString(2, category);
 //	  			 ps.execute();
 //	  		 }
@@ -87,7 +92,4 @@ public class MySQLConnection implements DBConnection {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	
-	
 }

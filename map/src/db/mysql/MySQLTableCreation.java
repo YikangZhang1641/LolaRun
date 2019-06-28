@@ -20,14 +20,14 @@ public class MySQLTableCreation {
 				
 				// Step 2 Drop tables in case they exist.
 				Statement statement = conn.createStatement();
-				
-				String sql = "DROP TABLE IF EXISTS users";
-				statement.executeUpdate(sql);			
+				String sql;
 				
 				sql = "DROP TABLE IF EXISTS orders";
-				statement.executeUpdate(sql);
-
+				statement.executeUpdate(sql);	
 				
+				sql = "DROP TABLE IF EXISTS users";
+				statement.executeUpdate(sql);			
+
 				// Step 3 Create new tables
 				sql = "CREATE TABLE users ("
 						+ "user_id VARCHAR(255) NOT NULL,"
@@ -39,14 +39,14 @@ public class MySQLTableCreation {
 				statement.executeUpdate(sql);
 				
 				sql = "CREATE TABLE orders ("
-						+ "user_id VARCHAR(255) NOT NULL,"
 						+ "order_id int NOT NULL AUTO_INCREMENT,"
+						+ "user_id VARCHAR(255) NOT NULL,"
 						+ "origin VARCHAR(255),"
 						+ "destination VARCHAR(255),"
-						+ "distance FLOAT,"
-						+ "duration FLOAT,"
-						+ "use_quad BOOLEAN,"
-						+ "price FLOAT,"
+						+ "distance int,"
+						+ "duration int,"
+						+ "vehicle VARCHAR(255),"
+						+ "price DOUBLE,"
 						+ "PRIMARY KEY (order_id),"
 						+ "FOREIGN KEY (user_id) REFERENCES users(user_id)"
 						+ ")";

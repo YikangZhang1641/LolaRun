@@ -7,6 +7,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import db.DBConnection;
+import db.DBConnectionFactory;
+import entity.Order.OrderBuilder;
+
 /**
  * Servlet implementation class Confirm
  */
@@ -35,8 +42,38 @@ public class Confirm extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String origin = request.getParameter("start_location");
-		String destination = request.getParameter("destination");
+
+		
+		DBConnection connection = DBConnectionFactory.getConnection();
+	  	 try {
+	  		String user_id = request.getParameter("user_id");
+			String origin = request.getParameter("start_location");
+			String destination = request.getParameter("destination");
+			String vehicle = request.getParameter("vehicle");
+			
+			int distance = Integer.parseInt(request.getParameter("distance"));
+			int duration = Integer.parseInt(request.getParameter("duration"));
+			double price = Double.parseDouble(request.getParameter("price"));	  		 
+	  		
+			OrderBuilder builder = new OrderBuilder();
+			builder.setUserID(user_id);
+			builder.setOriginAddr(origin);
+			builder.setDestAddr(destination);
+			builder.setDistanceValue(distance);
+			builder.setDurationValue(duration);
+			builder.setPrice(price);
+			builder.setVehicle(vehicle);
+			builder.setTimeStamp();
+			
+	  		connection.saveOrder(builder.build());
+	  		RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
+	  		
+	  	 } catch (Exception e) {
+	  		 e.printStackTrace();
+	  	 } finally {
+	  		 connection.close();
+	  	 }
+
 		
 		
 	}
