@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Order {
 	private String user_id;
-	private String order_id;
+	private int order_id;
 	private String origin;
 	private String destination;
 	private String time_stamp;
@@ -29,7 +29,7 @@ public class Order {
 	
 	public static class OrderBuilder {
 		private String user_id;
-		private String order_id;
+		private int order_id;
 		
 		private String origin;
 		private String destination;

@@ -47,6 +47,7 @@ public class MySQLTableCreation {
 						+ "duration int,"
 						+ "vehicle VARCHAR(255),"
 						+ "price DOUBLE,"
+						+ "time_stamp VARCHAR(255),"
 						+ "PRIMARY KEY (order_id),"
 						+ "FOREIGN KEY (user_id) REFERENCES users(user_id)"
 						+ ")";

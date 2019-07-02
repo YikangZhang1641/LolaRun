@@ -11,6 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import db.DBConnection;
 import entity.Order;
 import entity.Route;
@@ -61,7 +64,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		
 		 try {
-	  		 String sql = "INSERT IGNORE INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
+	  		 String sql = "INSERT IGNORE INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)";
 	  		 PreparedStatement ps = conn.prepareStatement(sql);
 	  		 ps.setString(1, order.getUserID());
 //	  		 ps.setString(2, order.getName());
@@ -71,7 +74,7 @@ public class MySQLConnection implements DBConnection {
 	  		 ps.setInt(5, order.getDurationValue());
 	  		 ps.setString(6, order.getVehicle());
 	  		 ps.setDouble(7, order.getPrice());
-//	  		 ps.setNull(8, Types.INTEGER);;
+	  		 ps.setString(8, order.getTimeStamp());;
 	  		 ps.execute();
 //	  		
 //	  		 sql = "INSERT IGNORE INTO categories VALUES(?, ?)";
@@ -154,4 +157,73 @@ public class MySQLConnection implements DBConnection {
 		}
 		return false;
 	}
+	
+	@Override
+	public JSONObject trackByID(int trackID) {
+		// TODO Auto-generated method stub
+		if (conn == null) {
+			return null;
+		}
+		
+		JSONObject obj = new JSONObject();
+		try {
+			String sql = "SELECT * from orders WHERE order_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, trackID);
+			
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				obj.put("order_id", rs.getInt("order_id"));
+				obj.put("user_id", rs.getString("user_id"));
+				obj.put("origin", rs.getString("origin"));
+				obj.put("destination", rs.getString("destination"));
+				obj.put("vehicle", rs.getString("vehicle"));
+				obj.put("time_stamp", rs.getString("time_stamp"));
+				
+				obj.put("distance", rs.getInt("distance"));
+				obj.put("duration", rs.getInt("duration"));
+				obj.put("price", rs.getDouble("price"));
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return obj;
+	}
+	
+	
+	@Override
+	public JSONArray trackByUser(String user) {
+		// TODO Auto-generated method stub
+		if (conn == null) {
+			return null;
+		}
+		
+		JSONArray array = new JSONArray();
+		try {
+			String sql = "SELECT * from orders WHERE user_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, user);
+			
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				JSONObject obj = new JSONObject();
+				obj.put("order_id", rs.getInt("order_id"));
+				obj.put("user_id", rs.getString("user_id"));
+				obj.put("origin", rs.getString("origin"));
+				obj.put("destination", rs.getString("destination"));
+				obj.put("vehicle", rs.getString("vehicle"));
+				obj.put("time_stamp", rs.getString("time_stamp"));
+				
+				obj.put("distance", rs.getInt("distance"));
+				obj.put("duration", rs.getInt("duration"));
+				obj.put("price", rs.getDouble("price"));
+				
+				array.put(obj.toString());
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return array;
+	}
+	
 }

@@ -2,6 +2,9 @@ package db;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import entity.Order;
 import entity.Route;
 
@@ -17,4 +20,8 @@ public interface DBConnection {
 	boolean registerUser(String userId, String password, String firstname, String lastname);
 
 	String getFullname(String userId);
+
+	JSONObject trackByID(int trackID);
+
+	JSONArray trackByUser(String user);
 }

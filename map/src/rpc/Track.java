@@ -1,32 +1,30 @@
 package rpc;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import entity.Route;
-import external.GoogleMapAPI;
+import db.DBConnection;
+import db.DBConnectionFactory;
 
 /**
- * Servlet implementation class Quote
+ * Servlet implementation class Track
  */
-@WebServlet("/search")
-public class Quote extends HttpServlet {
+@WebServlet("/track")
+public class Track extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Quote() {
+    public Track() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,7 +34,24 @@ public class Quote extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+//		response.getWriter().append("Served at: ").append(request.getContextPath());
+//		HttpSession session = request.getSession(false);
+//		if (session == null) {
+//			response.setStatus(403);
+//			return;
+//		}
+//		
+		DBConnection connection = DBConnectionFactory.getConnection();
+		String order_id = request.getParameter("order_id");
+		String user_id = request.getParameter("user_id");
+		
+		if (order_id != null) {
+			JSONObject obj = connection.trackByID(Integer.parseInt(order_id));
+			RpcHelper.writeJsonObject(response, obj);
+		} else {
+			JSONArray array = connection.trackByUser(user_id);
+			RpcHelper.writeJsonArray(response, array);
+		}
 	}
 
 	/**
@@ -44,27 +59,7 @@ public class Quote extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
-		String origin = request.getParameter("start_location");
-		String destination = request.getParameter("end_location");
-		
-		GoogleMapAPI googleMapAPI = new GoogleMapAPI();
-		
-		List<Route> routes = googleMapAPI.search(origin, destination);
-		
-		JSONArray array = new JSONArray();
-		try {		
-			for (Route r : routes) {
-				JSONObject obj = new JSONObject();
-				obj.put("distance", r.getDistanceText());
-				obj.put("duration", r.getDurationText());
-				array.put(obj);
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		RpcHelper.writeJsonArray(response, array);
+		doGet(request, response);
 	}
 
 }
