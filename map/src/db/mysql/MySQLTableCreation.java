@@ -2,6 +2,8 @@ package db.mysql;
 
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.sql.Connection;
 
 public class MySQLTableCreation {
@@ -21,6 +23,9 @@ public class MySQLTableCreation {
 				// Step 2 Drop tables in case they exist.
 				Statement statement = conn.createStatement();
 				String sql;
+
+				sql = "DROP TABLE IF EXISTS robots";
+				statement.executeUpdate(sql);	
 				
 				sql = "DROP TABLE IF EXISTS orders";
 				statement.executeUpdate(sql);	
@@ -43,24 +48,29 @@ public class MySQLTableCreation {
 						+ "user_id VARCHAR(255) NOT NULL,"
 						+ "origin VARCHAR(255),"
 						+ "destination VARCHAR(255),"
-						+ "distance int,"
-						+ "duration int,"
+						+ "distance VARCHAR(255),"
+						+ "duration VARCHAR(255),"
 						+ "vehicle VARCHAR(255),"
 						+ "price DOUBLE,"
 						+ "time_stamp VARCHAR(255),"
+						+ "track_status VARCHAR(255),"
 						+ "PRIMARY KEY (order_id),"
 						+ "FOREIGN KEY (user_id) REFERENCES users(user_id)"
 						+ ")";
 				statement.executeUpdate(sql);
 
-//
-//				sql = "CREATE TABLE categories ("
-//						+ "item_id VARCHAR(255) NOT NULL,"
-//						+ "category VARCHAR(255) NOT NULL,"
-//						+ "PRIMARY KEY (item_id, category),"
-//						+ "FOREIGN KEY (item_id) REFERENCES items(item_id)"
-//						+ ")";
-//				statement.executeUpdate(sql);
+
+				sql = "CREATE TABLE robots ("
+						+ "robot_id int NOT NULL,"
+						+ "type VARCHAR(255),"
+						+ "busy boolean,"
+						+ "order_id int,"
+						+ "position VARCHAR(255),"
+						+ "time_stamp VARCHAR(255),"
+						+ "PRIMARY KEY (robot_id)"
+//						+ "FOREIGN KEY (order_id) REFERENCES orders(order_id)"
+						+ ")";
+				statement.executeUpdate(sql);
 //
 //				sql = "CREATE TABLE history ("
 //						+ "user_id VARCHAR(255) NOT NULL,"
@@ -77,6 +87,17 @@ public class MySQLTableCreation {
 				sql = "INSERT INTO users VALUES('1111', '3229c1097c00d497a0fd282d586be050', 'John', 'Smith')";
 				statement.executeUpdate(sql);
 				
+				for (int i = 0; i < 20; i++) {
+					String s = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+					sql = String.format("INSERT INTO robots VALUES('%d', 'drone', %b, '%d', 'origin', '%s')", i, false, -1, s);
+					statement.executeUpdate(sql);
+				}
+				
+				for (int i = 21; i < 40; i++) {
+					String s = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+					sql = String.format("INSERT INTO robots VALUES('%d', 'robot', %b, '%d', 'origin', '%s')", i, false, -1, s);
+					statement.executeUpdate(sql);
+				}				
 				  
 				conn.close();
 				System.out.println("Import done successfully");

@@ -5,26 +5,34 @@ import java.util.Date;
 
 public class Order {
 	private String user_id;
-	private int order_id;
+//	private int order_id;
 	private String origin;
 	private String destination;
 	private String time_stamp;
 	private String vehicle;
+	private String track_status;
 	
+	private String distance_text;
+	private String duration_text;
 	private int duration;
 	private int distance;
 	private double price;
 	
 	private Order(OrderBuilder ob) {
 		this.user_id = ob.user_id;
-		this.order_id = ob.order_id;
+//		this.order_id = ob.order_id;
 		this.origin = ob.origin;
 		this.destination = ob.destination;
 		this.time_stamp = ob.time_stamp;
+		
+		this.distance_text = ob.distance_text;
+		this.duration_text = ob.duration_text;		
 		this.distance = ob.distance;
 		this.duration = ob.duration;
+		
 		this.price = ob.price;
 		this.vehicle = ob.vehicle;
+		this.track_status = ob.track_status;
 	}
 	
 	public static class OrderBuilder {
@@ -35,7 +43,10 @@ public class Order {
 		private String destination;
 		private String time_stamp;
 		private String vehicle;
+		private String track_status;
 		
+		private String distance_text;
+		private String duration_text;
 		private int distance;
 		private int duration;
 		
@@ -62,10 +73,10 @@ public class Order {
 			return this;
 		}
 
-//		public OrderBuilder setDurationText(String duration_text) {
-//			this.duration_text = duration_text;
-//			return this;
-//		}
+		public OrderBuilder setDurationText(String duration_text) {
+			this.duration_text = duration_text;
+			return this;
+		}
 		
 //		public OrderBuilder setTrafficDurationValue(int duration_in_traffic_value) {
 //			this.duration_in_traffic_value = duration_in_traffic_value;
@@ -81,11 +92,11 @@ public class Order {
 			this.distance = distance_value;
 			return this;
 		}
-//		
-//		public OrderBuilder setDistanceText(String distance_text) {
-//			this.distance_text = distance_text;
-//			return this;
-//		}		
+		
+		public OrderBuilder setDistanceText(String distance_text) {
+			this.distance_text = distance_text;
+			return this;
+		}		
 		
 		public OrderBuilder setTimeStamp() {
 			this.time_stamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
@@ -99,6 +110,11 @@ public class Order {
 		
 		public OrderBuilder setVehicle(String vehicle) {
 			this.vehicle = vehicle;
+			return this;
+		}
+		
+		public OrderBuilder setTrackStatus(String track_status) {
+			this.track_status = track_status;
 			return this;
 		}
 		
@@ -119,9 +135,9 @@ public class Order {
 		return this.destination;
 	}
 	
-//	public String getDurationText() {
-//		return this.duration_text;
-//	}
+	public String getDurationText() {
+		return this.duration_text;
+	}
 	
 	public int getDurationValue() {
 		return this.duration;
@@ -135,10 +151,10 @@ public class Order {
 //		return this.duration_in_traffic_value;
 //	}
 
-//	public String getDistanceText() {
-//		return this.distance_text;
-//	}		
-//	
+	public String getDistanceText() {
+		return this.distance_text;
+	}		
+	
 	public int getDistanceValue() {
 		return this.distance;
 	}		
@@ -153,5 +169,9 @@ public class Order {
 	
 	public String getVehicle() {
 		return this.vehicle;
+	}
+	
+	public String getTrackStatus() {
+		return this.track_status;
 	}
 }

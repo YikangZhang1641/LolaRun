@@ -56,38 +56,45 @@ public class MySQLConnection implements DBConnection {
 	
 
 	@Override
-	public void saveOrder(Order order) {
+	public int saveOrder(Order order) {
 		// TODO Auto-generated method stub
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return;
+			return -1;
 		}
 		
+ 		 int id = -1;
 		 try {
-	  		 String sql = "INSERT IGNORE INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)";
+	  		 String sql = "INSERT IGNORE INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	  		 PreparedStatement ps = conn.prepareStatement(sql);
 	  		 ps.setString(1, order.getUserID());
 //	  		 ps.setString(2, order.getName());
 	  		 ps.setString(2, order.getOriginAddr());
 	  		 ps.setString(3, order.getDestAddr());
-	  		 ps.setInt(4, order.getDistanceValue());
-	  		 ps.setInt(5, order.getDurationValue());
+	  		 
+//	  		 ps.setInt(4, order.getDistanceValue());
+//	  		 ps.setInt(5, order.getDurationValue());
+	  		 ps.setString(4, order.getDistanceText());
+	  		 ps.setString(5, order.getDurationText());
+	  		 
 	  		 ps.setString(6, order.getVehicle());
 	  		 ps.setDouble(7, order.getPrice());
 	  		 ps.setString(8, order.getTimeStamp());;
+	  		 ps.setString(9, order.getTrackStatus());
 	  		 ps.execute();
-//	  		
-//	  		 sql = "INSERT IGNORE INTO categories VALUES(?, ?)";
-//	  		 ps = conn.prepareStatement(sql);
-//	  		 ps.setString(1, order.getorderId());
-//	  		 for(String category : order.getCategories()) {
-//	  			 ps.setString(2, category);
-//	  			 ps.execute();
-//	  		 }
+	  		
+	  		 sql = "SELECT max(order_id) FROM orders;";
+	  		 PreparedStatement statement = conn.prepareStatement(sql);
+	  		 ResultSet rs = statement.executeQuery();
+	  		 while (rs.next()) {
+	  			 //id = rs.getInt(1);
+	  			 id = rs.getInt("max(order_id)");
+	  		 }
 	  		
 	  	 } catch (Exception e) {
 	  		 e.printStackTrace();
 	  	 }
+		 return id;
 	}
 
 	
@@ -179,6 +186,7 @@ public class MySQLConnection implements DBConnection {
 				obj.put("destination", rs.getString("destination"));
 				obj.put("vehicle", rs.getString("vehicle"));
 				obj.put("time_stamp", rs.getString("time_stamp"));
+				obj.put("track_status", rs.getString("track_status"));
 				
 				obj.put("distance", rs.getInt("distance"));
 				obj.put("duration", rs.getInt("duration"));
@@ -213,9 +221,12 @@ public class MySQLConnection implements DBConnection {
 				obj.put("destination", rs.getString("destination"));
 				obj.put("vehicle", rs.getString("vehicle"));
 				obj.put("time_stamp", rs.getString("time_stamp"));
+				obj.put("track_status", rs.getString("track_status"));
 				
-				obj.put("distance", rs.getInt("distance"));
-				obj.put("duration", rs.getInt("duration"));
+//				obj.put("distance", rs.getInt("distance"));
+//				obj.put("duration", rs.getInt("duration"));
+				obj.put("distance", rs.getString("distance"));
+				obj.put("duration", rs.getString("duration"));
 				obj.put("price", rs.getDouble("price"));
 				
 				array.put(obj.toString());
@@ -226,4 +237,64 @@ public class MySQLConnection implements DBConnection {
 		return array;
 	}
 	
+	
+	@Override
+	public boolean setPickUpByMachine(int order_id, String type) {
+//		if (conn == null) {
+//			return false;
+//		}
+		
+		String track_status = null;
+		int robot_id = -1;
+		try {
+			// check if order status valid
+			String sql = "SELECT * from orders WHERE order_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, order_id);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				track_status = rs.getString("track_status");
+			}
+			if (track_status == null || !track_status.equals("OrderPlaced")) {
+				System.out.println("Status Failure.");
+				return false;
+			}
+			
+			// check if robot status valid
+			sql = "SELECT * from robots WHERE busy = false AND type = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setString(1, type);
+			rs = statement.executeQuery();
+
+			while (rs.next()) {
+				robot_id = rs.getInt("robot_id");
+				break;
+			}
+			if (robot_id == -1) {
+				System.out.println("No robots available.");
+				return false;
+			}
+			
+			// update order and robot
+			sql = "UPDATE robots SET busy = true WHERE robot_id = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, robot_id);
+			statement.execute();
+
+			sql = "UPDATE orders SET track_status = 'PickedUpByMachine' WHERE order_id = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, order_id);
+			statement.execute();
+
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return true;
+	}
+	
+	@Override 
+	public boolean setInTransit(int order_id, int robot_id) {
+		return true;
+	}
 }

@@ -15,13 +15,17 @@ public interface DBConnection {
 
 	public List<Route> searchRoutes(String origin, String destination);
 
-	void saveOrder(Order order);
+	public int saveOrder(Order order);
 
-	boolean registerUser(String userId, String password, String firstname, String lastname);
+	public boolean registerUser(String userId, String password, String firstname, String lastname);
 
-	String getFullname(String userId);
+	public String getFullname(String userId);
 
-	JSONObject trackByID(int trackID);
+	public JSONObject trackByID(int trackID);
 
-	JSONArray trackByUser(String user);
+	public JSONArray trackByUser(String user);
+
+	public boolean setPickUpByMachine(int order_id, String vehicle);
+
+	boolean setInTransit(int order_id, int robot_id);
 }

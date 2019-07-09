@@ -60,22 +60,30 @@ public class Confirm extends HttpServlet {
 			String destination = input.getString("destination");
 			String vehicle = input.getString("vehicle");
 			
-			int distance = Integer.parseInt(input.getString("distance"));
-			int duration = Integer.parseInt(input.getString("duration"));
+//			int distance = Integer.parseInt(input.getString("distance"));
+//			int duration = Integer.parseInt(input.getString("duration"));
+			String distance_text = input.getString("distance");
+			String duration_text = input.getString("duration");
 			double price = Double.parseDouble(input.getString("price"));	  		 
 	  		
 			OrderBuilder builder = new OrderBuilder();
 			builder.setUserID(user_id);
 			builder.setOriginAddr(origin);
 			builder.setDestAddr(destination);
-			builder.setDistanceValue(distance);
-			builder.setDurationValue(duration);
+			builder.setDistanceText(distance_text);
+			builder.setDurationText(duration_text);
 			builder.setPrice(price);
 			builder.setVehicle(vehicle);
 			builder.setTimeStamp();
+			builder.setTrackStatus("OrderPlaced");
 			
-	  		connection.saveOrder(builder.build());
-	  		RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
+	  		int id = connection.saveOrder(builder.build());
+	  		
+	  		
+	  		JSONObject res = new JSONObject();
+	  		res.put("result", "SUCCESS");
+	  		res.put("order_id", id);
+	  		RpcHelper.writeJsonObject(response, res);
 	  		
 	  	 } catch (Exception e) {
 	  		 e.printStackTrace();
