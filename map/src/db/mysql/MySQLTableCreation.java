@@ -54,6 +54,7 @@ public class MySQLTableCreation {
 						+ "price DOUBLE,"
 						+ "time_stamp VARCHAR(255),"
 						+ "track_status VARCHAR(255),"
+						+ "robot_id int,"
 						+ "PRIMARY KEY (order_id),"
 						+ "FOREIGN KEY (user_id) REFERENCES users(user_id)"
 						+ ")";

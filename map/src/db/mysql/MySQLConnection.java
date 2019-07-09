@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,7 +67,7 @@ public class MySQLConnection implements DBConnection {
 		
  		 int id = -1;
 		 try {
-	  		 String sql = "INSERT IGNORE INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	  		 String sql = "INSERT IGNORE INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)";
 	  		 PreparedStatement ps = conn.prepareStatement(sql);
 	  		 ps.setString(1, order.getUserID());
 //	  		 ps.setString(2, order.getName());
@@ -188,9 +190,12 @@ public class MySQLConnection implements DBConnection {
 				obj.put("time_stamp", rs.getString("time_stamp"));
 				obj.put("track_status", rs.getString("track_status"));
 				
-				obj.put("distance", rs.getInt("distance"));
-				obj.put("duration", rs.getInt("duration"));
+				obj.put("distance", rs.getString("distance"));
+				obj.put("duration", rs.getString("duration"));
+				
 				obj.put("price", rs.getDouble("price"));
+				obj.put("robot_id", rs.getDouble("robot_id"));
+
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -239,13 +244,13 @@ public class MySQLConnection implements DBConnection {
 	
 	
 	@Override
-	public boolean setPickUpByMachine(int order_id, String type) {
+	public int setPickUpByMachine(int order_id, String type) {
 //		if (conn == null) {
 //			return false;
 //		}
 		
 		String track_status = null;
-		int robot_id = -1;
+		int robot_id = -1;	
 		try {
 			// check if order status valid
 			String sql = "SELECT * from orders WHERE order_id = ?";
@@ -257,7 +262,7 @@ public class MySQLConnection implements DBConnection {
 			}
 			if (track_status == null || !track_status.equals("OrderPlaced")) {
 				System.out.println("Status Failure.");
-				return false;
+				return -1;
 			}
 			
 			// check if robot status valid
@@ -272,29 +277,135 @@ public class MySQLConnection implements DBConnection {
 			}
 			if (robot_id == -1) {
 				System.out.println("No robots available.");
-				return false;
+				return -1;
 			}
 			
 			// update order and robot
-			sql = "UPDATE robots SET busy = true WHERE robot_id = ?";
-			statement = conn.prepareStatement(sql);
-			statement.setInt(1, robot_id);
-			statement.execute();
-
-			sql = "UPDATE orders SET track_status = 'PickedUpByMachine' WHERE order_id = ?";
+			sql = "UPDATE robots SET busy = true, order_id = ?, time_stamp = ? WHERE robot_id = ?";
 			statement = conn.prepareStatement(sql);
 			statement.setInt(1, order_id);
+			statement.setString(2, new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+			statement.setInt(3, robot_id);
+			statement.execute();
+
+			sql = "UPDATE orders SET track_status = 'PickedUpByMachine', robot_id = ? WHERE order_id = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, robot_id);
+			statement.setInt(2, order_id);
 			statement.execute();
 
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return true;
+		return robot_id;
 	}
 	
 	@Override 
 	public boolean setInTransit(int order_id, int robot_id) {
+		String track_status = null;
+		
+		try {
+			// check if order status valid
+			String sql = "SELECT * from orders WHERE order_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, order_id);
+			
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				track_status = rs.getString("track_status");
+				break;
+			}
+			
+			if (!track_status.equals("PickedUpByMachine")) {
+				System.out.println("Status Failure.");
+				return false;
+			}
+			
+			// check if robot status valid
+			sql = "SELECT * from robots WHERE robot_id = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, robot_id);
+			rs = statement.executeQuery();
+
+			int check_id = -1;
+			while (rs.next()) {
+				check_id = rs.getInt("robot_id");
+				break;
+			}
+			if (check_id == -1 || check_id != robot_id) {
+				System.out.println("Robot ID unavailable.");
+				return false;
+			}
+			
+			// update order and robot
+			sql = "UPDATE orders SET track_status = 'InTransit', time_stamp = ? WHERE order_id = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setString(1, new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+			statement.setInt(2, order_id);
+			statement.execute();
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return true;
+	}
+	
+	
+	
+	
+	@Override 
+	public boolean setDelivered(int order_id, int robot_id) {
+		String track_status = null;
+		
+		try {
+			// check if order status valid
+			String sql = "SELECT * from orders WHERE order_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, order_id);
+			
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				track_status = rs.getString("track_status");
+				break;
+			}
+			
+			if (!track_status.equals("InTransit")) {
+				System.out.println("Status Failure.");
+				return false;
+			}
+			
+			// check if robot status valid
+			sql = "SELECT * from robots WHERE robot_id = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, robot_id);
+			rs = statement.executeQuery();
+
+			int check_id = -1;
+			while (rs.next()) {
+				check_id = rs.getInt("robot_id");
+				break;
+			}
+			if (check_id == -1 || check_id != robot_id) {
+				System.out.println("Robot ID unavailable.");
+				return false;
+			}
+			
+			// update order and robot
+			sql = "UPDATE orders SET track_status = 'Delivered', robot_id = NULL WHERE order_id = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, order_id);
+			statement.execute();
+			
+			sql = "UPDATE robots SET busy = false, time_stamp = ? WHERE order_id = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setString(1, new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+			statement.setInt(2, order_id);
+			statement.execute();
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		return true;
 	}
 }

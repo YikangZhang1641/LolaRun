@@ -40,23 +40,29 @@ public class Deliver extends HttpServlet {
 		int order_id = Integer.parseInt(request.getParameter("order_id"));
 		int robot_id = Integer.parseInt(request.getParameter("robot_id"));
 		String statusUpdate = request.getParameter("statusUpdate");
-		String type = request.getParameter("robotType");
+		String robotType = request.getParameter("robotType");
 		
 		JSONObject res = new JSONObject();
+		boolean flag = false;
 		try {		
-			if (statusUpdate.equals("OrderPlaced")) {
-				connection.setPickUpByMachine(order_id, type);
-			} else if (statusUpdate.equals("PickedUpByMachine")) {
-				
+			int tmp_id = 0;
+			if (statusUpdate.equals("PickedUpByMachine")) {
+				tmp_id = connection.setPickUpByMachine(order_id, robotType);
+				flag = true;
+				res.put("robot_id", tmp_id);
 			} else if (statusUpdate.equals("InTransit")) {
-				
+				flag = connection.setInTransit(order_id, robot_id);
 			} else if (statusUpdate.equals("Delivered")) {
-				
+				flag = connection.setDelivered(order_id, robot_id);
 			} else {
 				
 			}
 		
-			res.put("result", "Succeed!");
+			if (flag == true) {
+				res.put("result", "Succeed!");
+			} else {
+				res.put("result", "Failed");
+			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

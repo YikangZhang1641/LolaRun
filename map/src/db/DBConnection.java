@@ -25,7 +25,9 @@ public interface DBConnection {
 
 	public JSONArray trackByUser(String user);
 
-	public boolean setPickUpByMachine(int order_id, String vehicle);
+	int setPickUpByMachine(int order_id, String vehicle);
 
 	boolean setInTransit(int order_id, int robot_id);
+
+	boolean setDelivered(int order_id, int robot_id);
 }
