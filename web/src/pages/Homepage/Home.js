@@ -12,6 +12,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Hidden from '@material-ui/core/Hidden';
 import Container from '@material-ui/core/Container';
 import { Link } from 'react-router-dom';
+import logo from './images/logo.jpg';
 
 function MadeWithLove() {
   return (
@@ -41,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.grey[800],
     color: theme.palette.common.white,
     marginBottom: theme.spacing(4),
-    backgroundImage: 'url(https://source.unsplash.com/user/erondu)',
+    backgroundImage: `url(${logo})`,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
@@ -97,11 +98,13 @@ const featuredPosts = [
     title: 'Shipping',
     description:
       'This is a wider card with supporting text below as a natural lead-in to additional content.',
+    image: require('./images/drone.jpg'), 
   },
   {
     title: 'Tracking',
     description:
       'This is a wider card with supporting text below as a natural lead-in to additional content.',
+    image: require('./images/robot.jpg'),
   },
 ];
 
@@ -131,7 +134,7 @@ export default function Home() {
             {
               <img
                 style={{ display: 'none' }}
-                src="https://source.unsplash.com/user/erondu"
+                src = {logo}
                 alt="background"
               />
             }
@@ -171,7 +174,7 @@ export default function Home() {
                     <Hidden xsDown>
                       <CardMedia
                         className={classes.cardMedia}
-                        image="https://source.unsplash.com/random"
+                        image={post.image}
                         title="Image title"
                       />
                     </Hidden>
@@ -187,7 +190,7 @@ export default function Home() {
       <footer className={classes.footer}>
         <Container maxWidth="lg">
           <Typography variant="h6" align="center" gutterBottom>
-            Footer
+            The High Tech Shipping
           </Typography>
           <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
             Something here to give the footer a purpose!

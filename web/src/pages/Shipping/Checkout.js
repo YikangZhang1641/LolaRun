@@ -8,9 +8,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-import Availability from './Availability';
 import AddressForm from './AddressForm';
 import RateForm from './RateForm';
 import Review from './Review';
@@ -54,18 +52,6 @@ const useStyles = theme => ({
   },
 });
 
-function MadeWithLove() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Built with love by the '}
-      <Link color="inherit" href="https://material-ui.com/">
-        {companyName}
-      </Link>
-      {' team.'}
-    </Typography>
-  );
-}
-
 function getDefaultAddress() {
   return {
     firstName: '',
@@ -78,7 +64,7 @@ function getDefaultAddress() {
   };
 }
 
-const steps = ['Check availability', 'Shipping address', 'Show Rates', 'Review your order'];
+const steps = ['Shipping address', 'Show Rates', 'Review your order'];
 
 class Checkout extends React.Component {
   state = {
@@ -139,10 +125,6 @@ class Checkout extends React.Component {
     } = this.state;
 
     switch (activeStep) {
-      // case 0:
-      //   return (
-      //     <Availability/>
-      //   );
       case 0:
         return (
           <AddressForm
@@ -259,7 +241,6 @@ class Checkout extends React.Component {
               )}
             </React.Fragment>
           </Paper>
-          <MadeWithLove />
         </main>
       </React.Fragment>
     );
