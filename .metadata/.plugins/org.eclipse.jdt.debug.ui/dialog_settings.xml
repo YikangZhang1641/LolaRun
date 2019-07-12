@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="expressionHistory">
+		<item key="expressionHistoryEntry_0" value="UPDATE robots SET busy = true WHERE robot_id = 21"/>
+		<item key="expressionHistoryEntryCount" value="2"/>
+		<item key="expressionHistoryEntry_1" value="J{&quot;destination_addresses&quot;:[&quot;San Francisco, CA, USA&quot;],&quot;rows&quot;:[{&quot;elements&quot;:[{&quot;duration&quot;:{&quot;text&quot;:&quot;12 hours 42 mins&quot;,&quot;value&quot;:45708},&quot;distance&quot;:{&quot;text&quot;:&quot;1,300 km&quot;,&quot;value&quot;:1299786},&quot;status&quot;:&quot;OK&quot;}]}],&quot;origin_addresses&quot;:[&quot;Seattle, WA, USA&quot;],&quot;status&quot;:&quot;OK&quot;}"/>
+	</section>
+	<section name="org.eclipse.jdt.internal.debug.ui.ExpressionInformationControlCreator$ExpressionInformationControl">
+		<item key="WIDTH" value="716"/>
+		<item key="HEIGHT" value="256"/>
+		<item key="SashWeightTree" value="500"/>
+		<item key="SashWeightDetails" value="500"/>
+	</section>
+</section>

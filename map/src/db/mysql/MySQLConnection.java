@@ -351,8 +351,23 @@ public class MySQLConnection implements DBConnection {
 		return true;
 	}
 	
-	
-	
+	@Override 
+	public boolean checkAvaliability() {
+		if (conn == null) {
+			return false;
+		}
+		try {
+			String sql = "SELECT * from robots WHERE busy = 0";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				return true;
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return false;
+	}
 	
 	@Override 
 	public boolean setDelivered(int order_id, int robot_id) {

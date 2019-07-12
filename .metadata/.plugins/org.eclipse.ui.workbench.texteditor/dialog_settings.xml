@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="checkAv"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="checkav"/>
+			<item value="trackBy"/>
+			<item value="track"/>
+			<item value="tra"/>
+			<item value="saveOr"/>
+			<item value="time"/>
+			<item value="setDistanceText"/>
+			<item value="save"/>
+			<item value="item"/>
+			<item value="Route"/>
+			<item value="rb"/>
+			<item value="fl"/>
+			<item value="getConnection"/>
+			<item value="&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;sql = &quot;CREATE TABLE categories (&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;item_id VARCHAR(255) NOT NULL,&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;category VARCHAR(255) NOT NULL,&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;PRIMARY KEY (item_id, category),&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;FOREIGN KEY (item_id) REFERENCES items(item_id)&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;)&quot;;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;statement.executeUpdate(sql);&#x0D;&#x0A;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;sql = &quot;CREATE TABLE history (&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;user_id VARCHAR(255) NOT NULL,&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;item_id VARCHAR(255) NOT NULL,&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;last_favor_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;PRIMARY KEY (user_id, item_id),&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;FOREIGN KEY (user_id) REFERENCES users(user_id),&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;FOREIGN KEY (item_id) REFERENCES items(item_id)&quot;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;&#x09;&#x09;+ &quot;)&quot;;&#x0D;&#x0A;&#x09;&#x09;&#x09;&#x09;statement.executeUpdate(sql);"/>
+			<item value="8080"/>
+		</list>
+		<list key="replacehistory">
+			<item value="order"/>
+			<item value="Order"/>
+			<item value="ob"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="1310"/>
+		<item key="DIALOG_Y_ORIGIN" value="251"/>
+		<item key="DIALOG_WIDTH" value="356"/>
+		<item key="DIALOG_HEIGHT" value="454"/>
+		<item key="DIALOG_FONT_NAME" value="1|Microsoft YaHei UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Microsoft YaHei UI"/>
+	</section>
+</section>

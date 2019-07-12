@@ -7,6 +7,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+
+import db.DBConnection;
+import db.DBConnectionFactory;
+
 /**
  * Servlet implementation class FirstCheck
  */
@@ -27,7 +32,20 @@ public class FirstCheck extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		DBConnection connection = DBConnectionFactory.getConnection();
+		try {		
+			JSONObject obj = new JSONObject();
+			if (connection.checkAvaliability()) {
+				obj.put("status", "Avaliable!");
+			} else {
+				obj.put("status", "Unavaliable.");
+			}
+			RpcHelper.writeJsonObject(response, obj);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
 	}
 
 	/**

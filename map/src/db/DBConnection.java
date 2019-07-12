@@ -30,4 +30,6 @@ public interface DBConnection {
 	boolean setInTransit(int order_id, int robot_id);
 
 	boolean setDelivered(int order_id, int robot_id);
+	
+	public boolean checkAvaliability();
 }
