@@ -55,20 +55,10 @@ public class Quote extends HttpServlet {
 		JSONArray array = new JSONArray();
 		try {		
 			for (Route r : routes) {
-				JSONObject Robj = new JSONObject();
-				Robj.put("distance", r.getDistanceText());
-				Robj.put("duration", r.getDurationText());
-				Robj.put("robotType", "robot");
-				Robj.put("price", "123");
-				array.put(Robj);
-			}
-			for (Route r : routes) {
-				JSONObject Dobj = new JSONObject();
-				Dobj.put("distance", r.getDistanceText());
-				Dobj.put("duration", r.getDurationText());
-				Dobj.put("robotType", "drone");
-				Dobj.put("price", "123");
-				array.put(Dobj);
+				JSONObject obj = new JSONObject();
+				obj.put("distance", r.getDistanceText());
+				obj.put("duration", r.getDurationText());
+				array.put(obj);
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
