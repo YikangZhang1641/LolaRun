@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import AddressForm from './AddressForm';
 import RateForm from './RateForm';
 import Review from './Review';
+import { Redirect } from "react-router-dom";
 
 const companyName = 'LOLARun'
 
@@ -64,7 +65,7 @@ function getDefaultAddress() {
   };
 }
 
-const steps = ['Shipping address', 'Show Rates', 'Review your order'];
+const steps = ['Shipping address', 'Show rates', 'Review order'];
 
 class Checkout extends React.Component {
   state = {
@@ -72,6 +73,7 @@ class Checkout extends React.Component {
     fromAddress: getDefaultAddress(),
     toAddress: getDefaultAddress(),
     activeStep: 0,
+    redirect: false
   };
 
   setSelectedOrderID = (orderID) => {
@@ -106,6 +108,11 @@ class Checkout extends React.Component {
         break;
       case 2:
         // TODO: Make API call to place order
+          setTimeout(() => {
+            this.setState({
+              redirect: true,
+            })
+          }, 3000);
         break;
       default:
     }
@@ -153,7 +160,6 @@ class Checkout extends React.Component {
         throw new Error('Unknown step');
     }
   }
-
   render() {
     const { classes } = this.props;
     const {
@@ -185,6 +191,9 @@ class Checkout extends React.Component {
       default:
     }
 
+    if (this.state.redirect) {
+      return <Redirect to='/' />
+    }
     return (
       <React.Fragment>
         <CssBaseline />
@@ -198,7 +207,7 @@ class Checkout extends React.Component {
         <main className={classes.layout}>
           <Paper className={classes.paper}>
             <Typography component="h1" variant="h4" align="center">
-              Rate & Ship
+              Shipping
             </Typography>
             <Stepper activeStep={activeStep} className={classes.stepper}>
               {steps.map(label => (

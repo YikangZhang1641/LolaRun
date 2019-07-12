@@ -18,15 +18,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Review(props) {
-  const { fromAddress, toAddress } = props;
-  const infos = [fromAddress, toAddress]
+export default function Result(props) {
+  const { trackingNumber } = props;
+  const infos = [trackingNumber]
   const classes = useStyles();
 
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Order summary
+        Shipping result
       </Typography>
       <List disablePadding>
         {infos.map((info, index) => {
@@ -38,7 +38,7 @@ export default function Review(props) {
                 color="textSecondary"
                 component="p"
               >
-                {(index === 0 ? 'From' : 'To') + ': ' + info.firstName + ' ' + info.lastName}
+                {(index === 0 ? 'From' : 'To') + ': ' + info.trackingNumber}
               </Typography>
               <Typography
                 variant="subtitle1"

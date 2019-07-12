@@ -8,10 +8,10 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-import AddressForm from './AddressForm';
-import Review from './Review';
+import TrackForm from './TrackForm';
+import Result from './Result';
+import { Redirect } from "react-router-dom";
 
 const companyName = 'LOLARun'
 
@@ -52,37 +52,18 @@ const useStyles = theme => ({
   },
 });
 
-function MadeWithLove() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Built with love by the '}
-      <Link color="inherit" href="https://material-ui.com/">
-        {companyName}
-      </Link>
-      {' team.'}
-    </Typography>
-  );
-}
-
-function getDefaultAddress() {
+function getTrackingNumber() {
   return {
-    firstName: '',
-    lastName: '',
-    addressLine1: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    country: '',
+    trackingNumber: ''
   };
 }
 
-const steps = ['Shipping numbser', 'Tracking result'];
+const steps = ['Tracking number', 'Shipping result'];
 
-class Checkout extends React.Component {
+class Track extends React.Component {
   state = {
     selectedOrderID: null,
-    fromAddress: getDefaultAddress(),
-    toAddress: getDefaultAddress(),
+    trackingNumber: getTrackingNumber(),
     activeStep: 0,
   };
 
@@ -92,32 +73,20 @@ class Checkout extends React.Component {
     });
   }
 
-  updateAddress = (isFrom = false, update = {}) => {
-    const { fromAddress, toAddress } = this.state;
-    if (isFrom) {
+  updateTrackingNumber = (update = {}) => {
+    const { trackingNumber } = this.state;
       this.setState({
-        fromAddress: {
-          ...fromAddress,
+        trackingNumber: {
+          ...trackingNumber,
           ...update,
         },
       });
-    } else {
-      this.setState({
-        toAddress: {
-          ...toAddress,
-          ...update,
-        },
-      });
-    }
   }
 
   handleNext = () => {
     switch (this.state.activeStep) {
       case 0:
         // TODO: Make API call to get quote
-        break;
-      case 2:
-        // TODO: Make API call to place order
         break;
       default:
     }
@@ -130,26 +99,22 @@ class Checkout extends React.Component {
 
   renderContent() {
     const {
-      fromAddress,
-      toAddress,
-      selectedOrderID,
+      trackingNumber,
       activeStep
     } = this.state;
 
     switch (activeStep) {
       case 0:
         return (
-          <AddressForm
-            fromAddress={fromAddress}
-            toAddress={toAddress}
-            updateAddress={this.updateAddress}
+          <TrackForm
+            trackingNumber={trackingNumber}
+            updateTrackingNumber={this.updateTrackingNumber}
           />
         );
       case 1:
         return (
-          <Review
-            fromAddress={fromAddress}
-            toAddress={toAddress}
+          <Result
+            trackingNumber={trackingNumber}
           />
         );
       default:
@@ -160,9 +125,7 @@ class Checkout extends React.Component {
   render() {
     const { classes } = this.props;
     const {
-      selectedOrderID,
-      fromAddress,
-      toAddress,
+      trackingNumber,
       activeStep
     } = this.state;
 
@@ -170,21 +133,13 @@ class Checkout extends React.Component {
     switch (activeStep) {
       case 0:
         if (
-          fromAddress.firstName === '' ||
-          fromAddress.addressLine1 === '' ||
-          fromAddress.city === '' ||
-          toAddress.firstName === '' ||
-          toAddress.addressLine1 === '' ||
-          toAddress.city === ''
+          trackingNumber === ''
         ) {
           isNextButtonDisabled = true;
         }
         break;
-      case 1:
-        if (selectedOrderID === null) {
-          isNextButtonDisabled = true;
-        }
-        break;
+      // case 1:
+      //   break;
       default:
     }
 
@@ -211,17 +166,11 @@ class Checkout extends React.Component {
               ))}
             </Stepper>
             <React.Fragment>
-              {activeStep === steps.length ? (
-                <React.Fragment>
-                  <Typography variant="h5" gutterBottom>
-                    Thank you for your order.
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    Your tracking number is #2001539. Please use this tracking number to
-                    track your package status. Thank you for using our service!
-                  </Typography>
-                </React.Fragment>
-              ) : (
+              {activeStep === steps.length ? 
+              (<React.Fragment>
+                  <Redirect to = '/' />
+                </React.Fragment>) : 
+              (
                 <React.Fragment>
                   {this.renderContent()}
                   <div className={classes.buttons}>
@@ -237,18 +186,17 @@ class Checkout extends React.Component {
                       onClick={this.handleNext}
                       className={classes.button}
                     >
-                      {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                      {activeStep === steps.length - 1 ? 'Done' : 'Next'}
                     </Button>
                   </div>
                 </React.Fragment>
               )}
             </React.Fragment>
           </Paper>
-          <MadeWithLove />
         </main>
       </React.Fragment>
     );
   }
 }
 
-export default withStyles(useStyles)(Checkout);
+export default withStyles(useStyles)(Track);
