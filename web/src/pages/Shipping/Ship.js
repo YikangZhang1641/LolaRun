@@ -12,7 +12,9 @@ import Typography from '@material-ui/core/Typography';
 import AddressForm from './AddressForm';
 import RateForm from './RateForm';
 import Review from './Review';
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
+import { SERVER_URL } from "../utils";
+import axios from "axios"; 
 
 const companyName = 'LOLARun'
 
@@ -199,9 +201,11 @@ class Ship extends React.Component {
         <CssBaseline />
         <AppBar position="absolute" color="default" className={classes.appBar}>
           <Toolbar>
+          <Link to= "/" style={{ textDecoration: "none"}} >
             <Typography variant="h5" color="inherit" noWrap>
               {companyName}
             </Typography>
+            </Link>
           </Toolbar>
         </AppBar>
         <main className={classes.layout}>

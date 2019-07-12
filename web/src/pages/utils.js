@@ -1,0 +1,1 @@
+export const SERVER_URL = "https://http://localhost:8080/map";

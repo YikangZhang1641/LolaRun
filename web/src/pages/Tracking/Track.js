@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TrackForm from './TrackForm';
 import Result from './Result';
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 const companyName = 'LOLARun'
 
@@ -133,7 +133,7 @@ class Track extends React.Component {
     switch (activeStep) {
       case 0:
         if (
-          trackingNumber === ''
+          trackingNumber.trackingNumber === ''
         ) {
           isNextButtonDisabled = true;
         }
@@ -148,9 +148,11 @@ class Track extends React.Component {
         <CssBaseline />
         <AppBar position="absolute" color="default" className={classes.appBar}>
           <Toolbar>
+          <Link to= "/" style={{ textDecoration: "none"}} >
             <Typography variant="h5" color="inherit" noWrap>
               {companyName}
             </Typography>
+          </Link>
           </Toolbar>
         </AppBar>
         <main className={classes.layout}>
