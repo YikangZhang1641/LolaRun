@@ -67,7 +67,7 @@ function getDefaultAddress() {
 
 const steps = ['Shipping address', 'Show rates', 'Review order'];
 
-class Checkout extends React.Component {
+class Ship extends React.Component {
   state = {
     selectedOrderID: null,
     fromAddress: getDefaultAddress(),
@@ -256,4 +256,4 @@ class Checkout extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(Checkout);
+export default withStyles(useStyles)(Ship);

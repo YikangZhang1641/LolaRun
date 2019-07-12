@@ -58,7 +58,7 @@ function getTrackingNumber() {
   };
 }
 
-const steps = ['Tracking number', 'Shipping result'];
+const steps = ['Tracking number', 'Tracking result'];
 
 class Track extends React.Component {
   state = {
