@@ -1,20 +1,17 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box'
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+// import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(theme => {
-  console.log(theme);
   return {
   '@global': {
     body: {
@@ -53,29 +50,10 @@ const useStyles = makeStyles(theme => {
   },
 };});
 
-const tiers = [
-  {
-    orderId: "123",
-    title: 'Drone',
-    subheader:'Super-Fast',
-    description: ['some description...', 'delivered by: 2019/07/01 15:30'],
-    price:'15.32',
-  },
-  {
-    orderId: "456",
-    title: 'Robot',
-    subheader:'Fast',
-    description: ['some description too', 'delivered by: 2019/07/01 10:30'],
-    price:'7.15',
-  },
-];
-
-
 export default function RateForm(props) {
-  const { selectedOrderID, setSelectedOrderID, fromAddress, toAddress } = props;
+  const { shippingOptions, selectedOptions, setSelectedOptions, fromAddress, toAddress } = props;
   const infos = [fromAddress, toAddress];
   const classes = useStyles();
-
   return (
     <React.Fragment>
       <CssBaseline />
@@ -94,42 +72,36 @@ export default function RateForm(props) {
       </Container>
       <Container maxWidth="md" component="main" className={classes.main}>
         <Grid container spacing={5} >
-          {tiers.map(tier => (
-            <Grid item key={tier.orderId} xs={12} sm={6} md={6}>
+          {shippingOptions.map(item => (
+            <Grid item key={item.robotType} xs={12} sm={6} md={6}>
               <Card onClick={() => {
-                setSelectedOrderID(tier.orderId);
+                setSelectedOptions(item);
               }}>
                 <CardActionArea>
                   <CardHeader
-                    title={tier.title}
-                    subheader={tier.subheader}
+                    title={item.robotType}
+                    subheader={item.duration}
                     titleTypographyProps={{ align: 'center' }}
                     subheaderTypographyProps={{ align: 'center' }}
                     className={classes.cardHeader}
                   />
                   <CardContent>
-                    <ul>
-                      {tier.description.map(line => (
-                        <Typography
-                          key={tier.orderId}
-                          component="li"
-                          variant="subtitle1"
-                          align="center"
-                          key={line}
-                        >
-                          {line}
-                        </Typography>
-                      ))}
-                    </ul>
+                    <Typography
+                      component="li"
+                      variant="subtitle2"
+                      align="center"
+                    >
+                      distance {item.distance}
+                    </Typography>
                   </CardContent>
                   <Button
                     fullWidth
-                    variant={tier.orderId === selectedOrderID ? 'contained' : 'outlined'}
+                    variant={item === selectedOptions ? 'contained' : 'outlined'}
                     color="primary"
                     size="large"
                     className={classes.cardButton}
                   >
-                      ${tier.price}
+                      price ${item.price}
                   </Button>
                 </CardActionArea>
               </Card>

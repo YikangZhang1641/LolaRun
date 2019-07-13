@@ -4,7 +4,6 @@ import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -19,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Review(props) {
-  const { fromAddress, toAddress } = props;
+  const { fromAddress, toAddress, selectedOptions } = props;
   const infos = [fromAddress, toAddress]
   const classes = useStyles();
 
@@ -51,9 +50,21 @@ export default function Review(props) {
             </div>
           )})}
         <ListItem className={classes.listItem}>
-          <ListItemText primary="Total" secondary="Estimated Arrival: 2019/06/30 15:00"/>
+        <ListItemText primary="Shipping Method"/>
             <Typography variant="subtitle1" className={classes.total}>
-              $15.00
+              {selectedOptions.robotType}
+            </Typography>
+        </ListItem>
+        <ListItem className={classes.listItem}>
+        <ListItemText primary="Estimated Arrival"/>
+            <Typography variant="subtitle1" className={classes.total}>
+              {selectedOptions.duration} later
+            </Typography>
+        </ListItem>
+        <ListItem className={classes.listItem}>
+        <ListItemText primary="Total"/>
+            <Typography variant="subtitle1" className={classes.total}>
+              ${selectedOptions.price}
             </Typography>
         </ListItem>
       </List>

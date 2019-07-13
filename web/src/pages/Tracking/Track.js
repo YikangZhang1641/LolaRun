@@ -11,9 +11,12 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TrackForm from './TrackForm';
 import Result from './Result';
+import { SERVER_URL } from "../utils";
 import { Redirect, Link } from "react-router-dom";
+import axios from "axios"; 
 
-const companyName = 'LOLARun'
+const companyName = 'LOLARun';
+const TRACK_ENDPOINT = `${SERVER_URL}/track`;
 
 const useStyles = theme => ({
   appBar: {
@@ -64,6 +67,7 @@ class Track extends React.Component {
   state = {
     selectedOrderID: null,
     trackingNumber: getTrackingNumber(),
+    trackResult: [],
     activeStep: 0,
   };
 
@@ -86,7 +90,19 @@ class Track extends React.Component {
   handleNext = () => {
     switch (this.state.activeStep) {
       case 0:
-        // TODO: Make API call to get quote
+          console.log(this.state.trackingNumber);
+          axios.get(TRACK_ENDPOINT, {
+            params: {
+              order_id: this.state.trackingNumber.trackingNumber
+            }
+          })
+          .then((response) => {
+            console.log(response);
+            this.setState({trackResult: response.data});
+          })               
+          .catch((error)=>{
+            console.log(error);
+          });
         break;
       default:
     }
