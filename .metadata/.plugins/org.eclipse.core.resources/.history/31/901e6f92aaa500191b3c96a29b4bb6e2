@@ -57,8 +57,8 @@ public class Confirm extends HttpServlet {
 	  		String user_id = "1111";
 
 			String origin = input.getString("start_location");
-			String destination = input.getString("end_location");
-			String vehicle = input.getString("robotType");
+			String destination = input.getString("destination");
+			String vehicle = input.getString("vehicle");
 			
 			String distance_text = input.getString("distance");
 			String duration_text = input.getString("duration");
