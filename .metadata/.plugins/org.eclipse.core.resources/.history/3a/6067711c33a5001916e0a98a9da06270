@@ -43,19 +43,18 @@ public class Confirm extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		HttpSession session = request.getSession(false);
-//		if (session == null) {
-//			response.setStatus(403);
-//			return;
-//		}
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		}
 		
 		DBConnection connection = DBConnectionFactory.getConnection();
 	  	 try {
 			JSONObject input = RpcHelper.readJSONObject(request);
 
 //			String user_id = session.getAttribute("user_id").toString(); 
-	  		String user_id = "1111";
-			
+	  		
 			String origin = input.getString("start_location");
 			String destination = input.getString("destination");
 			String vehicle = input.getString("vehicle");

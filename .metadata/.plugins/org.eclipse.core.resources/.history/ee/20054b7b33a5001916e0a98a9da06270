@@ -67,7 +67,7 @@ public class Quote extends HttpServlet {
 				Dobj.put("distance", r.getDistanceText());
 				Dobj.put("duration", r.getDurationText());
 				Dobj.put("robotType", "drone");
-				Dobj.put("price", "456");
+				Dobj.put("price", "123");
 				array.put(Dobj);
 			}
 		} catch (JSONException e) {
