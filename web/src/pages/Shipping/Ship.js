@@ -16,7 +16,9 @@ import { Redirect, Link } from "react-router-dom";
 import { SERVER_URL } from "../utils";
 import axios from "axios"; 
 
-const companyName = 'LOLARun'
+const companyName = 'LOLARun';
+const QUOTE_ENDPOINT = `${SERVER_URL}/search`;
+const COMFIRM_ENDPOINT = `${SERVER_URL}/comfirm`;
 
 const useStyles = theme => ({
   appBar: {
@@ -67,20 +69,22 @@ function getDefaultAddress() {
   };
 }
 
-const steps = ['Shipping address', 'Show rates', 'Review order'];
+const steps = ['Shipping address', 'Shipping details', 'Review order'];
 
 class Ship extends React.Component {
   state = {
-    selectedOrderID: null,
     fromAddress: getDefaultAddress(),
     toAddress: getDefaultAddress(),
     activeStep: 0,
-    redirect: false
+    shippingOptions: [],
+    selectedOptions: null,
+    orderId: null,
+    redirect: false,
   };
 
-  setSelectedOrderID = (orderID) => {
+  setSelectedOptions = (selectedOptions) => {
     this.setState({
-      selectedOrderID: orderID,
+      selectedOptions: selectedOptions,
     });
   }
 
@@ -106,15 +110,47 @@ class Ship extends React.Component {
   handleNext = () => {
     switch (this.state.activeStep) {
       case 0:
-        // TODO: Make API call to get quote
+        axios.get(QUOTE_ENDPOINT, {
+          params: {
+            start_location : this.state.fromAddress.addressLine1.split(' ').join('+') + 
+                        '+' + this.state.fromAddress.city + '+' + this.state.fromAddress.state,
+            end_location : this.state.toAddress.addressLine1.split(' ').join('+') + 
+                        '+' + this.state.toAddress.city + '+' + this.state.toAddress.state,
+          }
+        })
+        .then((response) => {
+          this.setState({shippingOptions: response.data});
+        })               
+        .catch((error)=>{
+          console.log(error);
+        });
+        break;
+      case 1: 
         break;
       case 2:
-        // TODO: Make API call to place order
-          setTimeout(() => {
-            this.setState({
-              redirect: true,
-            })
-          }, 3000);
+        axios.post(COMFIRM_ENDPOINT, {
+          data: {
+            'start_location': this.state.start_location,
+            'destination': this.state.end_location,
+            'vehicle': this.state.selectedOptions.robotType,
+            'distance': this.state.selectedOptions.distance,
+            'duration': this.state.selectedOptions.duration,
+            'price': this.state.selectedOptions.price
+          }
+        }, null)
+        .then((response) => {
+          this.setState({orderId: response.order_id});
+          console.log(this.state.orderId);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+                
+        setTimeout(() => {
+          this.setState({
+            redirect: true,
+          })
+        }, 5000);
         break;
       default:
     }
@@ -129,7 +165,6 @@ class Ship extends React.Component {
     const {
       fromAddress,
       toAddress,
-      selectedOrderID,
       activeStep
     } = this.state;
 
@@ -145,8 +180,9 @@ class Ship extends React.Component {
       case 1:
         return (
           <RateForm
-            selectedOrderID={selectedOrderID}
-            setSelectedOrderID={this.setSelectedOrderID}
+            shippingOptions={this.state.shippingOptions}
+            selectedOptions={this.state.selectedOptions}
+            setSelectedOptions={this.setSelectedOptions} 
             fromAddress={fromAddress}
             toAddress={toAddress}
           />
@@ -154,6 +190,7 @@ class Ship extends React.Component {
       case 2:
         return (
           <Review
+            selectedOptions={this.state.selectedOptions}
             fromAddress={fromAddress}
             toAddress={toAddress}
           />
@@ -224,10 +261,10 @@ class Ship extends React.Component {
               {activeStep === steps.length ? (
                 <React.Fragment>
                   <Typography variant="h5" gutterBottom>
-                    Thank you for your order.
+                    Thank you for choosing us.
                   </Typography>
                   <Typography variant="subtitle1">
-                    Your tracking number is #2001539. Please use this tracking number to
+                    Your tracking number is ${this.state.orderId}. Please use this tracking number to
                     track your package status. Thank you for using our service!
                   </Typography>
                 </React.Fragment>

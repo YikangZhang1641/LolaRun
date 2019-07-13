@@ -1,1 +1,1 @@
-export const SERVER_URL = "https://http://localhost:8080/map";
+export const SERVER_URL = "http://localhost:8080/map";

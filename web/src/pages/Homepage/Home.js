@@ -71,6 +71,7 @@ const useStyles = makeStyles(theme => ({
   },
   cardDetails: {
     flex: 1,
+    height: 200
   },
   cardMedia: {
     width: 160,
@@ -97,13 +98,13 @@ const featuredPosts = [
   {
     title: 'Shipping',
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      'Discover solutions for all your shipping needs',
     image: require('./images/drone.jpg'), 
   },
   {
     title: 'Tracking',
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      'Know more about your shipping status',
     image: require('./images/robot.jpg'),
   },
 ];
@@ -143,11 +144,14 @@ export default function Home() {
               <Grid item md={6}>
                 <div className={classes.mainFeaturedPostContent}>
                   <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-                    Title of a longer featured blog post
+                    Welcome To 
+                  </Typography>
+                  <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+                    LOLARun
                   </Typography>
                   <Typography variant="h5" color="inherit" paragraph>
-                    Multiple lines of text that form the lede, informing new readers quickly and
-                    efficiently about what&apos;s most interesting in this post&apos;s contents.
+                    The High Tech Shipping 
+                    {/* &apos;s contents. */}
                   </Typography>
                 </div>
               </Grid>
@@ -162,14 +166,14 @@ export default function Home() {
                   <Link to= {post.title} style={{ textDecoration: "none" }}>
                   <Card className={classes.card}>
                     <div className={classes.cardDetails}>
-                      <CardContent>
+                      <CardContent style={{ position: 'relative' }}>
                         <Typography component="h2" variant="h5">
                           {post.title}
                         </Typography>
-                        <Typography variant="subtitle1" paragraph>
-                          {post.description}
-                        </Typography>
                       </CardContent>
+                      <Typography variant="subtitle1" paragraph>
+                          {post.description}
+                      </Typography>
                     </div>
                     <Hidden xsDown>
                       <CardMedia
@@ -190,10 +194,10 @@ export default function Home() {
       <footer className={classes.footer}>
         <Container maxWidth="lg">
           <Typography variant="h6" align="center" gutterBottom>
-            The High Tech Shipping
+            Hope You Engoying Our Services
           </Typography>
           <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-            Something here to give the footer a purpose!
+            We are always around you
           </Typography>
           <MadeWithLove />
         </Container>
