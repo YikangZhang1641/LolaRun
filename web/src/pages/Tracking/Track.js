@@ -61,21 +61,14 @@ function getTrackingNumber() {
   };
 }
 
-const steps = ['Tracking number', 'Tracking result'];
+const steps = ['Tracking number', 'Shipping status'];
 
 class Track extends React.Component {
   state = {
-    selectedOrderID: null,
     trackingNumber: getTrackingNumber(),
-    trackResult: [],
+    trackResult: null,
     activeStep: 0,
   };
-
-  setSelectedOrderID = (orderID) => {
-    this.setState({
-      selectedOrderID: orderID,
-    });
-  }
 
   updateTrackingNumber = (update = {}) => {
     const { trackingNumber } = this.state;
@@ -90,14 +83,12 @@ class Track extends React.Component {
   handleNext = () => {
     switch (this.state.activeStep) {
       case 0:
-          console.log(this.state.trackingNumber);
           axios.get(TRACK_ENDPOINT, {
             params: {
               order_id: this.state.trackingNumber.trackingNumber
             }
           })
           .then((response) => {
-            console.log(response);
             this.setState({trackResult: response.data});
           })               
           .catch((error)=>{
@@ -116,6 +107,7 @@ class Track extends React.Component {
   renderContent() {
     const {
       trackingNumber,
+      trackResult,
       activeStep
     } = this.state;
 
@@ -130,7 +122,7 @@ class Track extends React.Component {
       case 1:
         return (
           <Result
-            trackingNumber={trackingNumber}
+            trackResult={trackResult}
           />
         );
       default:
@@ -154,11 +146,9 @@ class Track extends React.Component {
           isNextButtonDisabled = true;
         }
         break;
-      // case 1:
-      //   break;
       default:
     }
-
+    
     return (
       <React.Fragment>
         <CssBaseline />

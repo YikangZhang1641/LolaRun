@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-// import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -48,12 +48,18 @@ const useStyles = makeStyles(theme => {
     textAlign: "center",
     fontSize:"20px",
   },
+  progress: {
+    margin: theme.spacing(2),
+  }
 };});
 
 export default function RateForm(props) {
   const { shippingOptions, selectedOptions, setSelectedOptions, fromAddress, toAddress } = props;
   const infos = [fromAddress, toAddress];
   const classes = useStyles();
+  if (shippingOptions === null) {
+    return <CircularProgress className={classes.progress} />
+  } else {
   return (
     <React.Fragment>
       <CssBaseline />
@@ -110,5 +116,5 @@ export default function RateForm(props) {
         </Grid>
       </Container>
     </React.Fragment>
-  );
+  );}
 }

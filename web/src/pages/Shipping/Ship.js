@@ -1,38 +1,38 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Paper from '@material-ui/core/Paper';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import AddressForm from './AddressForm';
-import RateForm from './RateForm';
-import Review from './Review';
+import React from "react";
+import { withStyles } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Paper from "@material-ui/core/Paper";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import AddressForm from "./AddressForm";
+import RateForm from "./RateForm";
+import Review from "./Review";
 import { Redirect, Link } from "react-router-dom";
 import { SERVER_URL } from "../utils";
-import axios from "axios"; 
+import axios from "axios";
 
-const companyName = 'LOLARun';
+const companyName = "LOLARun";
 const QUOTE_ENDPOINT = `${SERVER_URL}/search`;
-const COMFIRM_ENDPOINT = `${SERVER_URL}/comfirm`;
+const COMFIRM_ENDPOINT = `${SERVER_URL}/confirm`;
 
 const useStyles = theme => ({
   appBar: {
-    position: 'relative',
+    position: "relative"
   },
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
       width: 600,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
+      marginLeft: "auto",
+      marginRight: "auto"
+    }
   },
   paper: {
     marginTop: theme.spacing(3),
@@ -41,35 +41,35 @@ const useStyles = theme => ({
     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
       marginTop: theme.spacing(6),
       marginBottom: theme.spacing(6),
-      padding: theme.spacing(3),
-    },
+      padding: theme.spacing(3)
+    }
   },
   stepper: {
-    padding: theme.spacing(3, 0, 5),
+    padding: theme.spacing(3, 0, 5)
   },
   buttons: {
-    display: 'flex',
-    justifyContent: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end"
   },
   button: {
     marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
-  },
+    marginLeft: theme.spacing(1)
+  }
 });
 
 function getDefaultAddress() {
   return {
-    firstName: '',
-    lastName: '',
-    addressLine1: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    country: '',
+    firstName: "",
+    lastName: "",
+    addressLine1: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: ""
   };
 }
 
-const steps = ['Shipping address', 'Shipping details', 'Review order'];
+const steps = ["Shipping address", "Shipping details", "Review order"];
 
 class Ship extends React.Component {
   state = {
@@ -79,14 +79,14 @@ class Ship extends React.Component {
     shippingOptions: [],
     selectedOptions: null,
     orderId: null,
-    redirect: false,
+    redirect: false
   };
 
-  setSelectedOptions = (selectedOptions) => {
+  setSelectedOptions = selectedOptions => {
     this.setState({
-      selectedOptions: selectedOptions,
+      selectedOptions: selectedOptions
     });
-  }
+  };
 
   updateAddress = (isFrom = false, update = {}) => {
     const { fromAddress, toAddress } = this.state;
@@ -94,79 +94,99 @@ class Ship extends React.Component {
       this.setState({
         fromAddress: {
           ...fromAddress,
-          ...update,
-        },
+          ...update
+        }
       });
     } else {
       this.setState({
         toAddress: {
           ...toAddress,
-          ...update,
-        },
+          ...update
+        }
       });
     }
-  }
+  };
 
   handleNext = () => {
     switch (this.state.activeStep) {
       case 0:
-        axios.get(QUOTE_ENDPOINT, {
-          params: {
-            start_location : this.state.fromAddress.addressLine1.split(' ').join('+') + 
-                        '+' + this.state.fromAddress.city + '+' + this.state.fromAddress.state,
-            end_location : this.state.toAddress.addressLine1.split(' ').join('+') + 
-                        '+' + this.state.toAddress.city + '+' + this.state.toAddress.state,
-          }
-        })
-        .then((response) => {
-          this.setState({shippingOptions: response.data});
-        })               
-        .catch((error)=>{
-          console.log(error);
-        });
+        axios
+          .get(QUOTE_ENDPOINT, {
+            params: {
+              start_location:
+                this.state.fromAddress.addressLine1.split(" ").join("+") +
+                "+" +
+                this.state.fromAddress.city +
+                "+" +
+                this.state.fromAddress.state,
+              end_location:
+                this.state.toAddress.addressLine1.split(" ").join("+") +
+                "+" +
+                this.state.toAddress.city +
+                "+" +
+                this.state.toAddress.state
+            }
+          })
+          .then(response => {
+            this.setState({ shippingOptions: response.data });
+          })
+          .catch(error => {
+            console.log(error);
+          });
         break;
-      case 1: 
+      case 1:
         break;
       case 2:
-        axios.post(COMFIRM_ENDPOINT, {
-          data: {
-            'start_location': this.state.start_location,
-            'destination': this.state.end_location,
-            'vehicle': this.state.selectedOptions.robotType,
-            'distance': this.state.selectedOptions.distance,
-            'duration': this.state.selectedOptions.duration,
-            'price': this.state.selectedOptions.price
-          }
-        }, null)
-        .then((response) => {
-          this.setState({orderId: response.order_id});
-          console.log(this.state.orderId);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-                
+        const payload = {
+          start_location:
+            this.state.fromAddress.addressLine1 +
+            ", " +
+            this.state.fromAddress.city +
+            ", " +
+            this.state.fromAddress.state,
+          end_location:
+            this.state.toAddress.addressLine1 +
+            ", " +
+            this.state.toAddress.city +
+            ", " +
+            this.state.toAddress.state,
+          robotType: this.state.selectedOptions.robotType,
+          distance: this.state.selectedOptions.distance,
+          duration: this.state.selectedOptions.duration,
+          price: this.state.selectedOptions.price
+        };
+        axios
+          .post(COMFIRM_ENDPOINT, payload, {
+            headers: {
+              "Content-Type": "text/plain",
+            }
+          })
+          .then(response => {
+            this.setState({ orderId: response.data.order_id });
+          })
+          .catch(error => {
+            console.log(error);
+          });
         setTimeout(() => {
           this.setState({
-            redirect: true,
-          })
+            redirect: true
+          });
         }, 5000);
         break;
       default:
     }
-    this.setState(prevState => ({ activeStep: prevState.activeStep + 1}));
-  }
+    this.setState(prevState => ({ activeStep: prevState.activeStep + 1 }));
+  };
 
   handleBack = () => {
-    this.setState(prevState => ({ activeStep: prevState.activeStep - 1}));
-  }
+    this.setState(prevState => ({ 
+      activeStep: prevState.activeStep - 1,
+      selectedOptions: null
+     }));
+  };
 
   renderContent() {
-    const {
-      fromAddress,
-      toAddress,
-      activeStep
-    } = this.state;
+    const { fromAddress, toAddress, activeStep } = this.state;
 
     switch (activeStep) {
       case 0:
@@ -182,7 +202,7 @@ class Ship extends React.Component {
           <RateForm
             shippingOptions={this.state.shippingOptions}
             selectedOptions={this.state.selectedOptions}
-            setSelectedOptions={this.setSelectedOptions} 
+            setSelectedOptions={this.setSelectedOptions}
             fromAddress={fromAddress}
             toAddress={toAddress}
           />
@@ -196,34 +216,29 @@ class Ship extends React.Component {
           />
         );
       default:
-        throw new Error('Unknown step');
+        throw new Error("Unknown step");
     }
   }
   render() {
     const { classes } = this.props;
-    const {
-      selectedOrderID,
-      fromAddress,
-      toAddress,
-      activeStep
-    } = this.state;
+    const { selectedOptions, fromAddress, toAddress, activeStep } = this.state;
 
     let isNextButtonDisabled = false;
     switch (activeStep) {
       case 0:
         if (
-          fromAddress.firstName === '' ||
-          fromAddress.addressLine1 === '' ||
-          fromAddress.city === '' ||
-          toAddress.firstName === '' ||
-          toAddress.addressLine1 === '' ||
-          toAddress.city === ''
+          fromAddress.firstName === "" ||
+          fromAddress.addressLine1 === "" ||
+          fromAddress.city === "" ||
+          toAddress.firstName === "" ||
+          toAddress.addressLine1 === "" ||
+          toAddress.city === ""
         ) {
           isNextButtonDisabled = true;
         }
         break;
       case 1:
-        if (selectedOrderID === null) {
+        if (selectedOptions === null) {
           isNextButtonDisabled = true;
         }
         break;
@@ -231,17 +246,17 @@ class Ship extends React.Component {
     }
 
     if (this.state.redirect) {
-      return <Redirect to='/' />
+      return <Redirect to="/" />;
     }
     return (
       <React.Fragment>
         <CssBaseline />
         <AppBar position="absolute" color="default" className={classes.appBar}>
           <Toolbar>
-          <Link to= "/" style={{ textDecoration: "none"}} >
-            <Typography variant="h5" color="inherit" noWrap>
-              {companyName}
-            </Typography>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <Typography variant="h5" color="inherit" noWrap>
+                {companyName}
+              </Typography>
             </Link>
           </Toolbar>
         </AppBar>
@@ -264,8 +279,9 @@ class Ship extends React.Component {
                     Thank you for choosing us.
                   </Typography>
                   <Typography variant="subtitle1">
-                    Your tracking number is ${this.state.orderId}. Please use this tracking number to
-                    track your package status. Thank you for using our service!
+                    Your tracking number is {this.state.orderId}. Please use
+                    this tracking number to track your package status. Thank you
+                    for using our service!
                   </Typography>
                 </React.Fragment>
               ) : (
@@ -273,7 +289,10 @@ class Ship extends React.Component {
                   {this.renderContent()}
                   <div className={classes.buttons}>
                     {activeStep !== 0 && (
-                      <Button onClick={this.handleBack} className={classes.button}>
+                      <Button
+                        onClick={this.handleBack}
+                        className={classes.button}
+                      >
                         Back
                       </Button>
                     )}
@@ -284,7 +303,7 @@ class Ship extends React.Component {
                       onClick={this.handleNext}
                       className={classes.button}
                     >
-                      {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                      {activeStep === steps.length - 1 ? "Place order" : "Next"}
                     </Button>
                   </div>
                 </React.Fragment>
