@@ -15,6 +15,7 @@ import Review from "./Review";
 import { Redirect, Link } from "react-router-dom";
 import { SERVER_URL } from "../utils";
 import axios from "axios";
+import { withAlert } from "react-alert";
 
 const companyName = "LOLARun";
 const QUOTE_ENDPOINT = `${SERVER_URL}/search`;
@@ -131,7 +132,11 @@ class Ship extends React.Component {
             this.setState({ shippingOptions: response.data });
           })
           .catch(error => {
+            this.props.alert.error(
+              "Oops, Something Wrong, Please double check"
+            );
             console.log(error);
+            this.handleBack();
           });
         break;
       case 1:
@@ -158,14 +163,18 @@ class Ship extends React.Component {
         axios
           .post(COMFIRM_ENDPOINT, payload, {
             headers: {
-              "Content-Type": "text/plain",
+              "Content-Type": "text/plain"
             }
           })
           .then(response => {
             this.setState({ orderId: response.data.order_id });
           })
           .catch(error => {
+            this.props.alert.error(
+              "Oops, Something Wrong, Please double check"
+            );
             console.log(error);
+            this.handleBack();
           });
         setTimeout(() => {
           this.setState({
@@ -179,10 +188,10 @@ class Ship extends React.Component {
   };
 
   handleBack = () => {
-    this.setState(prevState => ({ 
+    this.setState(prevState => ({
       activeStep: prevState.activeStep - 1,
       selectedOptions: null
-     }));
+    }));
   };
 
   renderContent() {
@@ -316,4 +325,4 @@ class Ship extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(Ship);
+export default withAlert()(withStyles(useStyles)(Ship));

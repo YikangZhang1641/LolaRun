@@ -1,13 +1,13 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+import React from "react";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
 
 function InputAddress(props) {
   const { address, updateAddress, isFrom } = props;
-  return(
-    <div style={{ marginBottom: '3rem' }}>
-      <Typography variant="h6" align='center' color='textPrimary'>
+  return (
+    <div style={{ marginBottom: "3rem" }}>
+      <Typography variant="h6" align="center" color="textPrimary">
         {props.title}
       </Typography>
       <Grid container spacing={3}>
@@ -19,7 +19,7 @@ function InputAddress(props) {
             label="First name"
             fullWidth
             value={address.firstName}
-            onChange={(event) => {
+            onChange={event => {
               updateAddress(isFrom, { firstName: event.target.value });
             }}
           />
@@ -31,7 +31,7 @@ function InputAddress(props) {
             label="Last name"
             fullWidth
             value={address.lastName}
-            onChange={(event) => {
+            onChange={event => {
               updateAddress(isFrom, { lastName: event.target.value });
             }}
           />
@@ -44,7 +44,7 @@ function InputAddress(props) {
             label="Address line 1"
             fullWidth
             value={address.addressLine1}
-            onChange={(event) => {
+            onChange={event => {
               updateAddress(isFrom, { addressLine1: event.target.value });
             }}
           />
@@ -57,7 +57,7 @@ function InputAddress(props) {
             label="City"
             fullWidth
             value={address.city}
-            onChange={(event) => {
+            onChange={event => {
               updateAddress(isFrom, { city: event.target.value });
             }}
           />
@@ -70,7 +70,7 @@ function InputAddress(props) {
             label="State/Province/Region"
             fullWidth
             value={address.state}
-            onChange={(event) => {
+            onChange={event => {
               updateAddress(isFrom, { state: event.target.value });
             }}
           />
@@ -82,7 +82,7 @@ function InputAddress(props) {
             label="Zip / Postal code"
             fullWidth
             value={address.zipCode}
-            onChange={(event) => {
+            onChange={event => {
               updateAddress(isFrom, { zipCode: event.target.value });
             }}
           />
@@ -94,7 +94,7 @@ function InputAddress(props) {
             label="Country"
             fullWidth
             value={address.country}
-            onChange={(event) => {
+            onChange={event => {
               updateAddress(isFrom, { country: event.target.value });
             }}
           />

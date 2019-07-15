@@ -1,19 +1,19 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import Ship from './Shipping/Ship';
-import Track from './Tracking/Track';
-import Home from './Homepage/Home';
-import Notfound from './FourOhFour/Notfound';
-import { Provider as AlertProvider } from 'react-alert'
-import AlertTemplate from 'react-alert-template-basic';
+import React from "react";
+import { Route, Switch } from "react-router-dom";
+import Ship from "./Shipping/Ship";
+import Track from "./Tracking/Track";
+import Home from "./Homepage/Home";
+import Notfound from "./FourOhFour/Notfound";
+import { Provider as AlertProvider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
 
 // optional cofiguration for alert
 const options = {
-  position: 'bottom center',
+  position: "bottom center",
   timeout: 5000,
-  offset: '30px',
-  transition: 'scale'
-}
+  offset: "30px",
+  transition: "scale"
+};
 
 const Main = () => (
   <AlertProvider template={AlertTemplate} {...options}>
@@ -25,6 +25,6 @@ const Main = () => (
       <Route component={Notfound} />
     </Switch>
   </AlertProvider>
-)
+);
 
 export default Main;

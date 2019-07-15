@@ -1,13 +1,13 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+import React from "react";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
 
 function InputNumber(props) {
   const { trackingNumber, updateTrackingNumber } = props;
-  return(
-    <div style={{ marginBottom: '3rem' }}>
-      <Typography variant="h6" align='center' color='textPrimary'>
+  return (
+    <div style={{ marginBottom: "3rem" }}>
+      <Typography variant="h6" align="center" color="textPrimary">
         {props.title}
       </Typography>
       <Grid container spacing={3}>
@@ -19,7 +19,7 @@ function InputNumber(props) {
             label="Please Enter The Tracking Number Here"
             fullWidth
             value={trackingNumber.trackingNumber}
-            onChange={(event) => {
+            onChange={event => {
               updateTrackingNumber({ trackingNumber: event.target.value });
             }}
           />
