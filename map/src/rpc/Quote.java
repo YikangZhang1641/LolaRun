@@ -51,6 +51,10 @@ public class Quote extends HttpServlet {
 		GoogleMapAPI googleMapAPI = new GoogleMapAPI();
 		
 		List<Route> routes = googleMapAPI.search(origin, destination);
+		if (routes.isEmpty()) {
+			response.setStatus(406);
+			response.getWriter().println("Address Not Available!");
+		}
 		
 		JSONArray array = new JSONArray();
 		try {		

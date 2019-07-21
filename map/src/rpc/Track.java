@@ -47,9 +47,19 @@ public class Track extends HttpServlet {
 		
 		if (order_id != null) {
 			JSONObject obj = connection.trackByID(Integer.parseInt(order_id));
+			if (obj == null || obj.length() == 0) {
+				response.setStatus(406);
+				response.getWriter().println("Order ID Not Found!");
+				return;
+			}
 			RpcHelper.writeJsonObject(response, obj);
 		} else {
 			JSONArray array = connection.trackByUser(user_id);
+			if (array.length() == 0) {
+				response.setStatus(406);
+				response.getWriter().println("User ID Not Found!");
+				return;
+			}
 			RpcHelper.writeJsonArray(response, array);
 		}
 	}
