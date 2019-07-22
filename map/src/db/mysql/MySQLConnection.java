@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -352,21 +353,30 @@ public class MySQLConnection implements DBConnection {
 	}
 	
 	@Override 
-	public boolean checkAvaliability() {
+	public boolean[] checkAvailability() {
+		boolean[] availabilityArray = new boolean[2];
 		if (conn == null) {
-			return false;
+			return availabilityArray;
 		}
 		try {
-			String sql = "SELECT * from robots WHERE busy = 0";
-			PreparedStatement statement = conn.prepareStatement(sql);
+			String sql_drone = "SELECT * from robots WHERE busy = 0 AND type = 'drone'";
+			PreparedStatement statement = conn.prepareStatement(sql_drone);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				return true;
+				availabilityArray[0] = true;
 			}
+			
+			String sql_robot = "SELECT * from robots WHERE busy = 0 AND type = 'robot'";
+			statement = conn.prepareStatement(sql_robot);
+			rs = statement.executeQuery();
+			if (rs.next()) {
+				availabilityArray[1] = true;
+			}
+			return availabilityArray;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return false;
+		return availabilityArray;
 	}
 	
 	@Override 

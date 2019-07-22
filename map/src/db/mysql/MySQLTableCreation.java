@@ -69,7 +69,6 @@ public class MySQLTableCreation {
 						+ "position VARCHAR(255),"
 						+ "time_stamp VARCHAR(255),"
 						+ "PRIMARY KEY (robot_id)"
-//						+ "FOREIGN KEY (order_id) REFERENCES orders(order_id)"
 						+ ")";
 				statement.executeUpdate(sql);
 //
