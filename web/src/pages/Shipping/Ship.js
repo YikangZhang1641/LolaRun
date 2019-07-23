@@ -20,6 +20,7 @@ import { withAlert } from "react-alert";
 const companyName = "LOLARun";
 const QUOTE_ENDPOINT = `${SERVER_URL}/search`;
 const COMFIRM_ENDPOINT = `${SERVER_URL}/confirm`;
+const CHECK_ENDPOINT = `${SERVER_URL}/firstcheck`;
 
 const useStyles = theme => ({
   appBar: {
@@ -194,6 +195,25 @@ class Ship extends React.Component {
     }));
   };
 
+  componentDidMount() {
+        axios
+          .get(CHECK_ENDPOINT)
+          .then(response => {
+            if (!response.data.drone_available && ! response.data.robot_available) {
+              this.props.alert.info(
+                "Not available robot. Please try next time"
+              );
+              this.setState({ redirect: true });
+            }
+          })
+          .catch(error => {
+            this.props.alert.error(
+              "Oops, Something Wrong, Please double check"
+            );
+            console.log(error);
+          });
+  }
+
   renderContent() {
     const { fromAddress, toAddress, activeStep } = this.state;
 
@@ -228,6 +248,7 @@ class Ship extends React.Component {
         throw new Error("Unknown step");
     }
   }
+
   render() {
     const { classes } = this.props;
     const { selectedOptions, fromAddress, toAddress, activeStep } = this.state;
@@ -239,9 +260,11 @@ class Ship extends React.Component {
           fromAddress.firstName === "" ||
           fromAddress.addressLine1 === "" ||
           fromAddress.city === "" ||
+          fromAddress.state === "" ||
           toAddress.firstName === "" ||
           toAddress.addressLine1 === "" ||
-          toAddress.city === ""
+          toAddress.city === "" ||
+          toAddress.state === ""
         ) {
           isNextButtonDisabled = true;
         }
