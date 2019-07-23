@@ -1,43 +1,40 @@
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-
-function InputNumber(props) {
-  const { trackingNumber, updateTrackingNumber } = props;
-  return (
-    <div style={{ marginBottom: "3rem" }}>
-      <Typography variant="h6" align="center" color="textPrimary">
-        {props.title}
-      </Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="number"
-            name="Tracking Number"
-            label="Please Enter The Tracking Number Here"
-            fullWidth
-            value={trackingNumber.trackingNumber}
-            onChange={event => {
-              updateTrackingNumber({ trackingNumber: event.target.value });
-            }}
-          />
-        </Grid>
-      </Grid>
-    </div>
-  );
-}
+import React from "react"
+import TextField from "@material-ui/core/TextField/TextField"
+import Button from "@material-ui/core/Button/Button"
 
 export default function TrackForm(props) {
-  const { trackingNumber, updateTrackingNumber } = props;
-  return (
-    <React.Fragment>
-      <InputNumber
-        // title="Please Enter The Tracking Number "
-        trackingNumber={trackingNumber}
-        updateTrackingNumber={updateTrackingNumber}
-      />
-    </React.Fragment>
-  );
+    const { trackingNumber, updateTrackingNumber,submitInput } = props;
+    return (
+        <React.Fragment>
+            <div>
+                <form noValidate>
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="user_id"
+                        label="Tracking Number"
+                        name="track"
+                        autoFocus
+                        value={trackingNumber}
+                        onChange={event => {
+                            updateTrackingNumber({ trackingNumber: event.target.value });
+
+                        }}
+                    />
+                    <Button
+                        type="submit"
+                        width = "100%"
+                        variant="contained"
+                        color="primary"
+                        onClick={submitInput}
+                    >
+                        Submit
+                    </Button>
+                </form>
+            </div>
+        </React.Fragment>
+    );
 }
+

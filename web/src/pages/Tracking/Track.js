@@ -1,206 +1,149 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Paper from "@material-ui/core/Paper";
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import TrackForm from "./TrackForm";
-import Result from "./Result";
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Paper from '@material-ui/core/Paper';
+import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
 import { SERVER_URL } from "../utils";
-import { Redirect, Link } from "react-router-dom";
 import axios from "axios";
-import { withAlert } from "react-alert";
+import TrackStatus from './TrackStatus';
+import TrackForm from './TrackForm';
 
-const companyName = "LOLARun";
 const TRACK_ENDPOINT = `${SERVER_URL}/track`;
+const companyName = 'LOLARun'
 
 const useStyles = theme => ({
-  appBar: {
-    position: "relative"
-  },
-  layout: {
-    width: "auto",
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
-      marginLeft: "auto",
-      marginRight: "auto"
-    }
-  },
-  paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: theme.spacing(6),
-      marginBottom: theme.spacing(6),
-      padding: theme.spacing(3)
-    }
-  },
-  stepper: {
-    padding: theme.spacing(3, 0, 5)
-  },
-  buttons: {
-    display: "flex",
-    justifyContent: "flex-end"
-  },
-  button: {
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1)
-  }
+    appBar: {
+        position: 'relative',
+    },
+    layout: {
+        width: 'auto',
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2),
+        [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
+            width: 600,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        },
+    },
+    paper: {
+        marginTop: theme.spacing(3),
+        marginBottom: theme.spacing(3),
+        padding: theme.spacing(2),
+        [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+            marginTop: theme.spacing(6),
+            marginBottom: theme.spacing(6),
+            padding: theme.spacing(3),
+        },
+    },
+    stepper: {
+        padding: theme.spacing(3, 0, 5),
+    },
+    buttons: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+    },
+    submit: {
+        marginTop: theme.spacing(3),
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width: 100,
+    },
 });
 
-function getTrackingNumber() {
-  return {
-    trackingNumber: ""
-  };
+function MadeWithLove() {
+    return (
+        <Typography variant="body2" color="textSecondary" align="center">
+            {'Built with love by the '}
+            <Link color="inherit" href="https://material-ui.com/">
+                {companyName}
+            </Link>
+            {' team.'}
+        </Typography>
+    );
 }
-
-const steps = ["Tracking number", "Shipping status"];
 
 class Track extends React.Component {
-  state = {
-    trackingNumber: getTrackingNumber(),
-    trackResult: null,
-    activeStep: 0
-  };
+    state = {
+        trackingNumber: null,
+        trackResult: null,
+        activeStep: 0
+    }
+    updateTrackingNumber = (update = {}) => {
+        this.setState({
+            trackingNumber: update.trackingNumber
+        });
+    };
 
-  updateTrackingNumber = (update = {}) => {
-    const { trackingNumber } = this.state;
-    this.setState({
-      trackingNumber: {
-        ...trackingNumber,
-        ...update
-      }
-    });
-  };
+    handleSubmit = e => {
+        e.preventDefault();
+        fetch(TRACK_ENDPOINT + '?order_id='+this.state.trackingNumber)
+            .then(response => {
+                if(response.ok){
+                    return response.json();
+                }
 
-  handleNext = () => {
-    switch (this.state.activeStep) {
-      case 0:
-        axios
-          .get(TRACK_ENDPOINT, {
-            params: {
-              order_id: this.state.trackingNumber.trackingNumber
-            }
-          })
-          .then(response => {
-            this.setState({ trackResult: response.data });
-          })
-          .catch(error => {
-            this.props.alert.error(
-              "Oops, Something Wrong, Please double check"
+                throw new Error("this is error");
+            })
+            .then(response =>  {
+                    this.setState({trackResult: response});
+                    this.setState(prevState => ({ activeStep: prevState.activeStep + 1 }));
+                }
+            )
+            .catch(err =>
+                    console.error(err),
+                //message.error('No Tracking Number in record')
             );
-            console.log(error);
-            this.handleBack();
-          });
-        break;
-      default:
+
     }
-    this.setState(prevState => ({ activeStep: prevState.activeStep + 1 }));
-  };
 
-  handleBack = () => {
-    this.setState(prevState => ({ activeStep: prevState.activeStep - 1 }));
-  };
-
-  renderContent() {
-    const { trackingNumber, trackResult, activeStep } = this.state;
-
-    switch (activeStep) {
-      case 0:
-        return (
-          <TrackForm
-            trackingNumber={trackingNumber}
-            updateTrackingNumber={this.updateTrackingNumber}
-          />
-        );
-      case 1:
-        return <Result trackResult={trackResult} />;
-      default:
-        throw new Error("Unknown step");
-    }
-  }
-
-  render() {
-    const { classes } = this.props;
-    const { trackingNumber, activeStep } = this.state;
-
-    let isNextButtonDisabled = false;
-    switch (activeStep) {
-      case 0:
-        if (trackingNumber.trackingNumber === "") {
-          isNextButtonDisabled = true;
+    renderContent() {
+        const { trackingNumber, trackResult, activeStep } = this.state;
+        switch (activeStep) {
+            case 0:
+                return (
+                    <TrackForm
+                        trackingNumber={trackingNumber}
+                        updateTrackingNumber={this.updateTrackingNumber}
+                        submitInput ={this.handleSubmit}
+                    />
+                );
+            case 1:
+                return <TrackStatus trackResult={trackResult} />;
+            default:
+                throw new Error("Unknown step");
         }
-        break;
-      default:
     }
 
-    return (
-      <React.Fragment>
-        <CssBaseline />
-        <AppBar position="absolute" color="default" className={classes.appBar}>
-          <Toolbar>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <Typography variant="h5" color="inherit" noWrap>
-                {companyName}
-              </Typography>
-            </Link>
-          </Toolbar>
-        </AppBar>
-        <main className={classes.layout}>
-          <Paper className={classes.paper}>
-            <Typography component="h1" variant="h4" align="center">
-              Track
-            </Typography>
-            <Stepper activeStep={activeStep} className={classes.stepper}>
-              {steps.map(label => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+    render() {
+        const { classes } = this.props;
+        const { trackingNumber, activeStep } = this.state;
+        return (
             <React.Fragment>
-              {activeStep === steps.length ? (
-                <React.Fragment>
-                  <Redirect to="/" />
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  {this.renderContent()}
-                  <div className={classes.buttons}>
-                    {activeStep !== 0 && (
-                      <Button
-                        onClick={this.handleBack}
-                        className={classes.button}
-                      >
-                        Back
-                      </Button>
-                    )}
-                    <Button
-                      disabled={isNextButtonDisabled}
-                      variant="contained"
-                      color="primary"
-                      onClick={this.handleNext}
-                      className={classes.button}
-                    >
-                      {activeStep === steps.length - 1 ? "Done" : "Next"}
-                    </Button>
-                  </div>
-                </React.Fragment>
-              )}
+                <CssBaseline />
+                <AppBar position="absolute" color="default" className={classes.appBar}>
+                    <Toolbar>
+                        <Typography variant="h5" color="inherit" noWrap>
+                            {companyName}
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <main className={classes.layout}>
+                    <Paper className={classes.paper}>
+                        <Typography component="h1" variant="h4" align="center">
+                            Tracking
+                        </Typography>
+                        {this.renderContent()}
+                    </Paper>
+                    <MadeWithLove />
+                </main>
             </React.Fragment>
-          </Paper>
-        </main>
-      </React.Fragment>
-    );
-  }
+        );
+    }
 }
 
-export default withAlert()(withStyles(useStyles)(Track));
+export default withStyles(useStyles)(Track);
+
+
