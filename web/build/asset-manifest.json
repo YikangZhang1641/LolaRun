@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f9c67ae1.chunk.css",
+    "main.js": "/static/js/main.a3457765.chunk.js",
+    "main.js.map": "/static/js/main.a3457765.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/js/2.bd62681d.chunk.js": "/static/js/2.bd62681d.chunk.js",
+    "static/js/2.bd62681d.chunk.js.map": "/static/js/2.bd62681d.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.0d6e5f93ab1d608e1f6b8f1c07d2f7b5.js": "/precache-manifest.0d6e5f93ab1d608e1f6b8f1c07d2f7b5.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.f9c67ae1.chunk.css.map": "/static/css/main.f9c67ae1.chunk.css.map",
+    "static/media/background.jpg": "/static/media/background.22411585.jpg",
+    "static/media/drone.jpg": "/static/media/drone.0b139534.jpg",
+    "static/media/robot.jpg": "/static/media/robot.59cb38d5.jpg"
+  }
+}
