@@ -1,16 +1,9 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Paper from '@material-ui/core/Paper';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
-
-const companyName = 'LOLARun'
 
 const useStyles = theme => ({
     appBar: {

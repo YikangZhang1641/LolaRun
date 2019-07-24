@@ -78,7 +78,7 @@ class Track extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        fetch(TRACK_ENDPOINT + '?order_id='+this.state.trackingNumber)
+        fetch(TRACK_ENDPOINT + '?order_id='+ this.state.trackingNumber)
             .then(response => {
                 if(response.ok){
                     return response.json();
@@ -118,7 +118,6 @@ class Track extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { trackingNumber, activeStep } = this.state;
         return (
             <React.Fragment>
                 <CssBaseline />
