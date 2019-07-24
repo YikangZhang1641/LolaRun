@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
+import { Link } from "react-router-dom";
 import Typography from '@material-ui/core/Typography';
 import { SERVER_URL } from "../utils";
 import TrackStatus from './TrackStatus';
@@ -51,18 +51,6 @@ const useStyles = theme => ({
         width: 100,
     },
 });
-
-function MadeWithLove() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Built with love by the '}
-            <Link color="inherit" href="https://material-ui.com/">
-                {companyName}
-            </Link>
-            {' team.'}
-        </Typography>
-    );
-}
 
 class Track extends React.Component {
     state = {
@@ -123,9 +111,11 @@ class Track extends React.Component {
                 <CssBaseline />
                 <AppBar position="absolute" color="default" className={classes.appBar}>
                     <Toolbar>
+                    <Link to="/" style={{ textDecoration: "none" }}>
                         <Typography variant="h5" color="inherit" noWrap>
                             {companyName}
                         </Typography>
+                    </Link>
                     </Toolbar>
                 </AppBar>
                 <main className={classes.layout}>
@@ -135,7 +125,6 @@ class Track extends React.Component {
                         </Typography>
                         {this.renderContent()}
                     </Paper>
-                    <MadeWithLove />
                 </main>
             </React.Fragment>
         );

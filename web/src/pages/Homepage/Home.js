@@ -177,7 +177,7 @@ export default function Home() {
       <footer className={classes.footer}>
         <Container maxWidth="lg">
           <Typography variant="h6" align="center" gutterBottom>
-            Hope You Engoying Our Services
+            Hope You Enjoying Our Services
           </Typography>
           <Typography
             variant="subtitle1"
