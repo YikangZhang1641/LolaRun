@@ -4,11 +4,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
-import { Link } from "react-router-dom";
+import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import { SERVER_URL } from "../utils";
 import TrackStatus from './TrackStatus';
 import TrackForm from './TrackForm';
+import { withAlert } from "react-alert";
 
 const TRACK_ENDPOINT = `${SERVER_URL}/track`;
 const companyName = 'LOLARun'
@@ -52,11 +53,23 @@ const useStyles = theme => ({
     },
 });
 
+function MadeWithLove() {
+    return (
+        <Typography variant="body2" color="textSecondary" align="center">
+            {'Built with love by the '}
+            <Link color="inherit" href="https://material-ui.com/">
+                {companyName}
+            </Link>
+            {' team.'}
+        </Typography>
+    );
+}
+
 class Track extends React.Component {
     state = {
         trackingNumber: null,
         trackResult: null,
-        activeStep: 0
+        activeStep: 0,
     }
     updateTrackingNumber = (update = {}) => {
         this.setState({
@@ -66,6 +79,12 @@ class Track extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
+        if(this.state.trackingNumber == null){
+            this.props.alert.error(
+                "Please input the Tracking Number"
+            );
+            return;
+        }
         fetch(TRACK_ENDPOINT + '?order_id='+ this.state.trackingNumber)
             .then(response => {
                 if(response.ok){
@@ -79,11 +98,12 @@ class Track extends React.Component {
                     this.setState(prevState => ({ activeStep: prevState.activeStep + 1 }));
                 }
             )
-            .catch(err =>
-                    console.error(err),
-                this.state.alert.error(
-                    "Oops,No Tracking Number in not in record"
-                )
+            .catch(err =>{
+                    console.error(err);
+                    this.props.alert.error(
+                        "Oops,No Tracking Number in not in record"
+                    );
+            }
             );
 
     }
@@ -113,11 +133,9 @@ class Track extends React.Component {
                 <CssBaseline />
                 <AppBar position="absolute" color="default" className={classes.appBar}>
                     <Toolbar>
-                    <Link to="/" style={{ textDecoration: "none" }}>
                         <Typography variant="h5" color="inherit" noWrap>
                             {companyName}
                         </Typography>
-                    </Link>
                     </Toolbar>
                 </AppBar>
                 <main className={classes.layout}>
@@ -127,12 +145,13 @@ class Track extends React.Component {
                         </Typography>
                         {this.renderContent()}
                     </Paper>
+                    <MadeWithLove />
                 </main>
             </React.Fragment>
         );
     }
 }
 
-export default withStyles(useStyles)(Track);
+export default withAlert()(withStyles(useStyles)(Track));
 
 
