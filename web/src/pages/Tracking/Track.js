@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { SERVER_URL } from "../utils";
 import TrackStatus from './TrackStatus';
 import TrackForm from './TrackForm';
+import { withAlert } from "react-alert";
 
 const TRACK_ENDPOINT = `${SERVER_URL}/track`;
 const companyName = 'LOLARun'
@@ -68,7 +69,7 @@ class Track extends React.Component {
     state = {
         trackingNumber: null,
         trackResult: null,
-        activeStep: 0
+        activeStep: 0,
     }
     updateTrackingNumber = (update = {}) => {
         this.setState({
@@ -78,6 +79,12 @@ class Track extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
+        if(this.state.trackingNumber == null){
+            this.props.alert.error(
+                "Please input the Tracking Number"
+            );
+            return;
+        }
         fetch(TRACK_ENDPOINT + '?order_id='+ this.state.trackingNumber)
             .then(response => {
                 if(response.ok){
@@ -91,9 +98,12 @@ class Track extends React.Component {
                     this.setState(prevState => ({ activeStep: prevState.activeStep + 1 }));
                 }
             )
-            .catch(err =>
-                    console.error(err),
-                //message.error('No Tracking Number in record')
+            .catch(err =>{
+                    console.error(err);
+                    this.props.alert.error(
+                        "This Tracking Number is not found, please double check"
+                    );
+            }
             );
 
     }
@@ -142,6 +152,6 @@ class Track extends React.Component {
     }
 }
 
-export default withStyles(useStyles)(Track);
+export default withAlert()(withStyles(useStyles)(Track));
 
 
