@@ -101,7 +101,7 @@ class Track extends React.Component {
             .catch(err =>{
                     console.error(err);
                     this.props.alert.error(
-                        "This Tracking Number is not found, please double check"
+                        "Oops,No Tracking Number in not in record"
                     );
             }
             );
