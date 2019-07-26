@@ -31,5 +31,5 @@ public interface DBConnection {
 
 	boolean setDelivered(int order_id, int robot_id);
 	
-	public boolean[] checkAvailability();
+	public int[] checkAvailability();
 }

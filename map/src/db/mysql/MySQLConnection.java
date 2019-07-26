@@ -353,25 +353,62 @@ public class MySQLConnection implements DBConnection {
 	}
 	
 	@Override 
-	public boolean[] checkAvailability() {
-		boolean[] availabilityArray = new boolean[2];
+	public int[] checkAvailability() {
+		int[] availabilityArray = new int[] {0, 0, 0};
 		if (conn == null) {
 			return availabilityArray;
 		}
+		
+		String sql;
+		PreparedStatement statement;
 		try {
-			String sql_drone = "SELECT * from robots WHERE busy = 0 AND type = 'drone'";
-			PreparedStatement statement = conn.prepareStatement(sql_drone);
-			ResultSet rs = statement.executeQuery();
-			if (rs.next()) {
-				availabilityArray[0] = true;
-			}
+			conn.setAutoCommit(false); // start transaction
+
+			sql ="INSERT INTO temp (drone_id, robot_id) VALUES (NULL, NULL);";
+			statement = conn.prepareStatement(sql);
+			statement.execute();
 			
-			String sql_robot = "SELECT * from robots WHERE busy = 0 AND type = 'robot'";
-			statement = conn.prepareStatement(sql_robot);
-			rs = statement.executeQuery();
-			if (rs.next()) {
-				availabilityArray[1] = true;
-			}
+			sql = "SELECT @temp_order_id:=(SELECT max(temp_id) from temp);";
+			statement = conn.prepareStatement(sql);
+			ResultSet rs_order = statement.executeQuery();
+
+			sql = "SELECT @temp_robot_id:=(select robot_id from robots where busy = 0 AND type = 'robot' LIMIT 1);";
+			statement = conn.prepareStatement(sql);
+			ResultSet rs_robot = statement.executeQuery();
+			
+			sql = "UPDATE temp SET robot_id=@temp_robot_id WHERE temp_id=@temp_order_id;";
+			statement = conn.prepareStatement(sql);
+			statement.execute();
+			
+			sql = "UPDATE robots SET busy=1, order_id=@temp_robot_id, temp_order=1 WHERE robot_id=@temp_robot_id;";
+			statement = conn.prepareStatement(sql);
+			statement.execute();
+			
+			sql = "SELECT @temp_drone_id:=(select robot_id from robots where busy = 0 AND type = 'drone' LIMIT 1);";
+			statement = conn.prepareStatement(sql);
+			ResultSet rs_drone = statement.executeQuery();
+			
+			sql = "UPDATE temp SET drone_id=@temp_drone_id WHERE temp_id=@temp_order_id;";
+			statement = conn.prepareStatement(sql);
+			statement.execute();
+			
+			sql = "UPDATE robots SET busy=1, order_id=@temp_robot_id, temp_order=1 WHERE robot_id=@temp_drone_id;";
+			statement = conn.prepareStatement(sql);
+			statement.execute();
+			
+			
+			conn.commit();
+			
+			while (rs_order.next()) {
+				availabilityArray[0] = rs_order.getInt(1);
+			}			
+			while (rs_drone.next()) {
+				availabilityArray[1] = rs_drone.getInt(1);
+			}	
+			while (rs_robot.next()) {
+				availabilityArray[2] = rs_robot.getInt(1);
+			}	
+			
 			return availabilityArray;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

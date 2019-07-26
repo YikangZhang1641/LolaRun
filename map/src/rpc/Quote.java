@@ -62,6 +62,8 @@ public class Quote extends HttpServlet {
 				JSONObject Robj = new JSONObject();
 				Robj.put("distance", r.getDistanceText());
 				Robj.put("duration", r.getDurationText());
+				
+				
 				Robj.put("robotType", "robot");
 				Robj.put("price", "123");
 				array.put(Robj);

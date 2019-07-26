@@ -4169,3 +4169,6 @@ This warning can be switched off on the Team > Git > Confirmations and Warnings 
 
 !ENTRY org.eclipse.wst.server.discovery 1 0 2019-07-25 21:50:52.594
 !MESSAGE already installed: org.eclipse.jst.server.generic.jonas4
+
+!ENTRY org.eclipse.jdt.debug 2 0 2019-07-26 15:02:06.460
+!MESSAGE Unable to find location of java.lang.Thread.setName() in debuggee JVM, for type java.lang.Thread

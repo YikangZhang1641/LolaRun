@@ -35,17 +35,22 @@ public class FirstCheck extends HttpServlet {
 		DBConnection connection = DBConnectionFactory.getConnection();
 		try {		
 			JSONObject obj = new JSONObject();
-			boolean[] availability = connection.checkAvailability();
-			if (availability[0]) {
-				obj.put("drone_available", "true");
-			} else {
-				obj.put("drone_available", "false");
-			}
-			if (availability[1]) {
-				obj.put("robot_available", "true");
-			} else {
-				obj.put("robot_available", "false");
-			}
+			int[] availability = connection.checkAvailability();
+			
+			obj.put("temp_id",  availability[0]);
+			obj.put("drone_id", availability[1]);
+			obj.put("robot_id", availability[2]);
+			
+//			if (availability[0] != 0) {
+//				obj.put("drone_available", "");
+//			} else {
+//				obj.put("drone_available", "false");
+//			}
+//			if (availability[1] != 0) {
+//				obj.put("robot_available", "true");
+//			} else {
+//				obj.put("robot_available", "false");
+//			}
 			RpcHelper.writeJsonObject(response, obj);
 		} catch (Exception e) {
 			e.printStackTrace();
