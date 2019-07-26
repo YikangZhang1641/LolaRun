@@ -51,10 +51,10 @@ class TrackStatus extends React.Component {
         const { trackResult,classes } = this.props;
         let activeStep = 0;
         switch (trackResult.track_status){
-            case 'Order Placed':
+            case 'OrderPlaced':
                 activeStep = 0;
                 break;
-            case 'In Transit':
+            case 'InTransit':
                 activeStep = 1;
                 break;
             case 'Delivered':

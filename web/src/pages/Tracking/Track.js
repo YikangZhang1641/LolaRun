@@ -90,7 +90,6 @@ class Track extends React.Component {
                 if(response.ok){
                     return response.json();
                 }
-
                 throw new Error("this is error");
             })
             .then(response =>  {
