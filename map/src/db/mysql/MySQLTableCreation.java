@@ -90,13 +90,13 @@ public class MySQLTableCreation {
 				sql = "INSERT INTO users VALUES('1111', '3229c1097c00d497a0fd282d586be050', 'John', 'Smith')";
 				statement.executeUpdate(sql);
 				
-				for (int i = 1; i <= 20; i++) {
+				for (int i = 1; i <= 2; i++) {
 					String s = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 					sql = String.format("INSERT INTO robots VALUES('%d', 'drone', %b, '%d', 'origin', '%s', false)", i, false, -1, s);
 					statement.executeUpdate(sql);
 				}
 				
-				for (int i = 21; i <= 40; i++) {
+				for (int i = 3; i <= 5; i++) {
 					String s = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 					sql = String.format("INSERT INTO robots VALUES('%d', 'robot', %b, '%d', 'origin', '%s', false)", i, false, -1, s);
 					statement.executeUpdate(sql);

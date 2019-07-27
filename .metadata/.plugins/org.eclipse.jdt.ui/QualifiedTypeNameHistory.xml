@@ -21,4 +21,5 @@
 <fullyQualifiedTypeName name="javax.servlet.http.HttpSession"/>
 <fullyQualifiedTypeName name="org.json.JSONArray"/>
 <fullyQualifiedTypeName name="org.json.JSONObject"/>
+<fullyQualifiedTypeName name="java.sql.SQLType"/>
 </qualifiedTypeNameHistroy>

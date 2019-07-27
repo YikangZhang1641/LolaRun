@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="2333"/>
+		<item key="selection" value="setPickUpByMachine"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="setPickUpByMachine"/>
+			<item value="availability"/>
+			<item value="avail"/>
+			<item value="avilib"/>
+			<item value="setAutoCommit"/>
+			<item value="saveorder"/>
+			<item value="checkAvailability"/>
+			<item value="firstcheck"/>
+			<item value="first"/>
+			<item value="temp"/>
+			<item value="sav"/>
 			<item value="2333"/>
 			<item value="8080"/>
 			<item value="8080、"/>
 			<item value="checkav"/>
-			<item value="trackBy"/>
-			<item value="track"/>
-			<item value="tra"/>
-			<item value="saveOr"/>
-			<item value="time"/>
-			<item value="setDistanceText"/>
-			<item value="save"/>
-			<item value="item"/>
-			<item value="Route"/>
-			<item value="rb"/>
-			<item value="fl"/>
 		</list>
 		<list key="replacehistory">
 			<item value="order"/>
