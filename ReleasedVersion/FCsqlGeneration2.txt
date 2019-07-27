@@ -11,7 +11,50 @@ CREATE TABLE robots (robot_id int NOT NULL, type VARCHAR(255), busy boolean, ord
 CREATE TABLE temp (temp_id int NOT NULL AUTO_INCREMENT, drone_id int, robot_id int, time_stamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (temp_id));
 INSERT INTO robots VALUES("1", "drone", false, "-1", "origin", "NULL", false);
 INSERT INTO robots VALUES("2", "drone", false, "-1", "origin", "NULL", false);
-INSERT INTO robots VALUES("3", "drone", false, "-1", "origin", "NULL", false);
+
+INSERT INTO robots VALUES("3", "robot", false, "-1", "origin", "NULL", false);
+INSERT INTO users VALUES('1111', '3229c1097c00d497a0fd282d586be050', 'John', 'Smith');
+
+drop procedure if exists tempPro;  
+DELIMITER ;;
+CREATE PROCEDURE tempPro()  
+BEGIN  
+    declare tid int;  
+    declare did int;   
+    declare rid int; 
+
+    declare done int default false;  
+    declare cur cursor for select temp_id, drone_id, robot_id from temp where time_stamp < (CURRENT_TIMESTAMP()+INTERVAL -5 MINUTE);  
+    declare continue HANDLER for not found set done = true;  
+    
+    open cur;  
+    fetch cur into tid, did, rid;  
+    while(not done) do   
+	UPDATE robots SET busy=0, temp_order=0, order_id=-1 WHERE robot_id=rid;
+	UPDATE robots SET busy=0, temp_order=0, order_id=-1 WHERE robot_id=did;
+	DELETE FROM temp WHERE temp_id=tid;
+	FETCH cur into tid, did, rid;  
+    end while;  
+      
+    close cur;   
+END;  
+;;
+DELIMITER ;
+
+
+DROP event IF EXISTS temp_del;
+SET GLOBAL event_scheduler=on;
+CREATE EVENT temp_del
+ON SCHEDULE EVERY 5 MINUTE
+ON COMPLETION PRESERVE
+DO CALL tempPro();
+
+
+
+
+
+
+
 INSERT INTO robots VALUES("4", "drone", false, "-1", "origin", "NULL", false);
 INSERT INTO robots VALUES("5", "drone", false, "-1", "origin", "NULL", false);
 INSERT INTO robots VALUES("6", "drone", false, "-1", "origin", "NULL", false);
@@ -51,3 +94,5 @@ INSERT INTO robots VALUES("39", "robot", false, "-1", "origin", "NULL", false);
 INSERT INTO robots VALUES("40", "robot", false, "-1", "origin", "NULL", false);
 
 INSERT INTO users VALUES('1111', '3229c1097c00d497a0fd282d586be050', 'John', 'Smith');
+
+

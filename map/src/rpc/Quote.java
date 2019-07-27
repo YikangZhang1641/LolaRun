@@ -66,7 +66,7 @@ public class Quote extends HttpServlet {
 				Robj.put("duration", r.getDurationText());
 				
 				Robj.put("robotType", "robot");
-				Robj.put("price", new DecimalFormat("#.##").format(r.getDistanceValue() * 0.001));
+				Robj.put("price", new DecimalFormat("#.##").format(r.getDistanceValue() * 0.0001));
 				array.put(Robj);
 			}
 			for (Route r : routes) {
@@ -74,7 +74,7 @@ public class Quote extends HttpServlet {
 				Dobj.put("distance", r.getDistanceText());
 				Dobj.put("duration", r.getDurationText());
 				Dobj.put("robotType", "drone");
-				Dobj.put("price", new DecimalFormat("#.##").format(filght_price));
+				Dobj.put("price", new DecimalFormat("#.##").format(filght_price / 10));
 				array.put(Dobj);
 			}
 		} catch (JSONException e) {

@@ -120,8 +120,14 @@ public class MySQLConnection implements DBConnection {
 	  		ps.setString(8, order.getTimeStamp());;
 	  		ps.setString(9, order.getTrackStatus());
 	  		if (order.getVehicle().equals("robot")) {
+	  			if (robot_id <= 0) {
+	  				throw new Exception("Invalid robot ID");
+	  			}
 	  			ps.setInt(10, robot_id); 
 	  		} else if (order.getVehicle().equals("drone")) {
+	  			if (drone_id <= 0) {
+	  				throw new Exception("Invalid drone ID");
+	  			}	  			
 	  			ps.setInt(10, drone_id);
 	  		} else {
 	  			ps.setNull(10, Types.INTEGER);
@@ -432,7 +438,7 @@ public class MySQLConnection implements DBConnection {
 	
 	@Override 
 	public int[] checkAvailability() {
-		int[] availabilityArray = new int[] {0, 0, 0};
+		int[] availabilityArray = new int[] {-1, -1, -1};
 		if (conn == null) {
 			return availabilityArray;
 		}
@@ -479,13 +485,20 @@ public class MySQLConnection implements DBConnection {
 			
 			while (rs_order.next()) {
 				availabilityArray[0] = rs_order.getInt(1);
+				if (availabilityArray[0] == 0) {
+					availabilityArray[0] = -1;
+				}
 			}			
 			while (rs_drone.next()) {
 				availabilityArray[1] = rs_drone.getInt(1);
-			}	
+				if (availabilityArray[1] == 0) {
+					availabilityArray[1] = -1;
+				}			}	
 			while (rs_robot.next()) {
 				availabilityArray[2] = rs_robot.getInt(1);
-			}	
+				if (availabilityArray[2] == 0) {
+					availabilityArray[2] = -1;
+				}			}	
 			
 			return availabilityArray;
 		} catch (Exception e) {
