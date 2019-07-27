@@ -80,12 +80,17 @@ class Track extends React.Component {
         let ref = Firebase.database().ref('/t1/' + this.state.trackingNumber )
             ref.once('value', snapshot => {
             
+            if(snapshot.val() == null) {
+                this.props.alert.error(
+                    "No tracking number found in record")
+            }
+            else {
             this.setState({
                 trackResult: snapshot.val().trackResult
             });
 
-           this.setState(prevState => ({ activeStep: prevState.activeStep + 1 }));
-
+            this.setState(prevState => ({ activeStep: prevState.activeStep + 1 }));
+            }
             })
 
     }
