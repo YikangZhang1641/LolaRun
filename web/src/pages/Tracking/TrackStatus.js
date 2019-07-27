@@ -4,7 +4,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import Firebase from 'firebase'
+import config from './config'
 
+if (!Firebase.apps.length) {
+        Firebase.initializeApp(config)
+ }
+ 
 const useStyles = theme => ({
     appBar: {
         position: 'relative',
@@ -47,21 +53,34 @@ const useStyles = theme => ({
 const steps = ['Order Placed','In Transit', 'Delivered'];
 
 class TrackStatus extends React.Component {
+    state = {trackResult: 0 }
+
+    componentDidMount() {
+        let ref = Firebase.database().ref('/t1/' + this.props.trackingNumber )
+            ref.on('value', snapshot => {
+            
+            this.setState({
+                trackResult: snapshot.val().trackResult
+            });
+            })
+    }
+    
     render() {
-        const { trackResult,classes } = this.props;
+        const classes = this.props.classes
         let activeStep = 0;
-        switch (trackResult.track_status){
-            case 'Order Placed':
+        switch (this.state.trackResult){
+            case 0:
                 activeStep = 0;
                 break;
-            case 'In Transit':
+            case 1:
                 activeStep = 1;
                 break;
-            case 'Delivered':
+            case 2:
                 activeStep = 2;
                 break;
             default:
-                throw new Error("Unknown step");
+                activeStep = 0;
+                break;
         }
         return (
             <React.Fragment>
@@ -74,7 +93,6 @@ class TrackStatus extends React.Component {
                             </Step>
                         ))}
                     </Stepper>
-
                 </main>
             </React.Fragment>
         );

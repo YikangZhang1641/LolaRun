@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Ship from "./Shipping/Ship";
 import Track from "./Tracking/Track";
+import MapContainer from "./Tracking/Map"
 import Home from "./Homepage/Home";
 import Notfound from "./FourOhFour/Notfound";
 import { Provider as AlertProvider } from "react-alert";
@@ -22,6 +23,7 @@ const Main = () => (
       <Route path="/home" component={Home} />
       <Route path="/tracking" component={Track} />
       <Route path="/shipping" component={Ship} />
+      <Route path="/map" component={MapContainer} />
       <Route component={Notfound} />
     </Switch>
   </AlertProvider>

@@ -14,6 +14,7 @@ import RateForm from "./RateForm";
 import Review from "./Review";
 import { Redirect, Link } from "react-router-dom";
 import { SERVER_URL } from "../utils";
+import { FIREFUNCTION_URL } from "../utils"
 import axios from "axios";
 import { withAlert } from "react-alert";
 
@@ -21,6 +22,7 @@ const companyName = "LOLARun";
 const QUOTE_ENDPOINT = `${SERVER_URL}/search`;
 const COMFIRM_ENDPOINT = `${SERVER_URL}/confirm`;
 const CHECK_ENDPOINT = `${SERVER_URL}/firstcheck`;
+const FIREBASE_ENDPOINT = `${FIREFUNCTION_URL}/addOrder`;
 
 const useStyles = theme => ({
   appBar: {
@@ -143,7 +145,7 @@ class Ship extends React.Component {
       case 1:
         break;
       case 2:
-        const payload = {
+        var payload = {
           start_location:
             this.state.fromAddress.addressLine1 +
             ", " +
@@ -168,8 +170,21 @@ class Ship extends React.Component {
             }
           })
           .then(response => {
-            this.setState({ orderId: response.data.order_id });
-          })
+            payload.id=response.data.order_id;
+            axios
+              .post(FIREBASE_ENDPOINT, payload, {
+                headers: {
+                  "Content-Type": "application/json"
+                }
+              })
+              .catch(error => {
+                this.props.alert.error(
+                  "Oops, Something Wrong, Please double check"
+                 );
+                console.log(error);
+              });
+              this.setState({ orderId: response.data.order_id });
+            })
           .catch(error => {
             this.props.alert.error(
               "Oops, Something Wrong, Please double check"
