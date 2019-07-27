@@ -15,7 +15,7 @@ public interface DBConnection {
 
 	public List<Route> searchRoutes(String origin, String destination);
 
-	public int saveOrder(Order order);
+	public int saveOrder(Order order, int temp_id) throws Exception;
 
 	public boolean registerUser(String userId, String password, String firstname, String lastname);
 

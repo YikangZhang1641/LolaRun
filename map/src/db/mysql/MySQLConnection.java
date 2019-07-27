@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.Statement;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
@@ -59,46 +60,123 @@ public class MySQLConnection implements DBConnection {
 	
 
 	@Override
-	public int saveOrder(Order order) {
+	public int saveOrder(Order order, int temp_id) throws Exception {
 		// TODO Auto-generated method stub
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return -1;
 		}
 		
- 		 int id = -1;
-		 try {
-	  		 String sql = "INSERT IGNORE INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)";
-	  		 PreparedStatement ps = conn.prepareStatement(sql);
-	  		 ps.setString(1, order.getUserID());
-//	  		 ps.setString(2, order.getName());
-	  		 ps.setString(2, order.getOriginAddr());
-	  		 ps.setString(3, order.getDestAddr());
-	  		 
-//	  		 ps.setInt(4, order.getDistanceValue());
-//	  		 ps.setInt(5, order.getDurationValue());
-	  		 ps.setString(4, order.getDistanceText());
-	  		 ps.setString(5, order.getDurationText());
-	  		 
-	  		 ps.setString(6, order.getVehicle());
-	  		 ps.setDouble(7, order.getPrice());
-	  		 ps.setString(8, order.getTimeStamp());;
-	  		 ps.setString(9, order.getTrackStatus());
-	  		 ps.execute();
+		if (temp_id <= 0) {
+			System.err.println("No valid temp id");
+			return -1;
+		}
+		
+		int id = -1;
+ 		String sql;
+ 		PreparedStatement ps;
+ 		int robot_id = -1;
+ 		int drone_id = -1;
+ 		try {
+ 			sql = "SELECT * FROM temp WHERE temp_id = ?";
+ 			PreparedStatement temp_ps = conn.prepareStatement(sql);
+ 			temp_ps.setInt(1, temp_id);
+	  		ResultSet temp_rs = temp_ps.executeQuery();
 	  		
-	  		 sql = "SELECT max(order_id) FROM orders;";
-	  		 PreparedStatement statement = conn.prepareStatement(sql);
-	  		 ResultSet rs = statement.executeQuery();
-	  		 while (rs.next()) {
-	  			 //id = rs.getInt(1);
-	  			 id = rs.getInt("max(order_id)");
-	  		 }
+	  		if (temp_rs.next()) {
+	  			robot_id = temp_rs.getInt("robot_id");
+	  			drone_id = temp_rs.getInt("drone_id");
+	  		} else {
+	  			throw new Exception();
+	  		}
+ 			
+			 
+ 			conn.setAutoCommit(false);
+ 			
+// 			sql = "SELECT @robot_id:=(SELECT robot_id FROM temp WHERE temp_id=?);";
+// 			ps = conn.prepareStatement(sql);
+// 			ps.setInt(1, temp_id);
+// 			ps.execute();
+//
+// 			sql = "SELECT @drone_id:=(SELECT drone_id FROM temp WHERE temp_id=?);";
+// 			ps = conn.prepareStatement(sql);
+// 			ps.setInt(1, temp_id);
+// 			ps.execute();
+ 			
+			sql = "INSERT IGNORE INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+ 			ps = conn.prepareStatement(sql);
+ 			ps.setString(1, order.getUserID());
+	//	  		 ps.setString(2, order.getName());
+	  		ps.setString(2, order.getOriginAddr());
+	  		ps.setString(3, order.getDestAddr());
+	  		 
+	//	  		 ps.setInt(4, order.getDistanceValue());
+	//	  		 ps.setInt(5, order.getDurationValue());
+	  		ps.setString(4, order.getDistanceText());
+	  		ps.setString(5, order.getDurationText());
+	  		 
+	  		ps.setString(6, order.getVehicle());
+	  		ps.setDouble(7, order.getPrice());
+	  		ps.setString(8, order.getTimeStamp());;
+	  		ps.setString(9, order.getTrackStatus());
+	  		if (order.getVehicle().equals("robot")) {
+	  			ps.setInt(10, robot_id); 
+	  		} else if (order.getVehicle().equals("drone")) {
+	  			ps.setInt(10, drone_id);
+	  		} else {
+	  			ps.setNull(10, Types.INTEGER);
+	  		}
+	  		ps.execute();
 	  		
-	  	 } catch (Exception e) {
-	  		 e.printStackTrace();
-	  	 }
-		 return id;
-	}
+	  		sql = "SELECT max(order_id) FROM orders FOR UPDATE;";
+	  		PreparedStatement statement = conn.prepareStatement(sql);
+	  		ResultSet rs_id = statement.executeQuery();
+	  		
+	  		
+	  		if (order.getVehicle().equals("robot")) {
+	  			sql = "UPDATE robots SET busy=0, temp_order=0, order_id=-1 WHERE robot_id=?";
+	 			ps = conn.prepareStatement(sql);
+	 			ps.setInt(1, drone_id);
+ 				ps.execute();
+	  			
+	  			sql = "UPDATE robots SET busy=1, temp_order=0, order_id=(SELECT max(order_id) FROM orders) WHERE robot_id=?";
+	 			ps = conn.prepareStatement(sql);
+	 			ps.setInt(1, robot_id);
+	  			ps.execute();
+	  			
+	  		} else if (order.getVehicle().equals("drone")) {
+	  			sql = "UPDATE robots SET busy=0, temp_order=0, order_id=-1 WHERE robot_id=?";
+	 			ps = conn.prepareStatement(sql);
+	 			ps.setInt(1, robot_id);
+	  			ps.execute();
+	  			
+	  			sql = "UPDATE robots SET busy=1, temp_order=0, order_id=(SELECT max(order_id) FROM orders) WHERE robot_id=?";
+	 			ps = conn.prepareStatement(sql);
+	 			ps.setInt(1, drone_id);
+	  			ps.execute();
+	  		}
+	  		
+	  		sql = "DELETE FROM temp WHERE temp_id=?";
+ 			ps = conn.prepareStatement(sql);
+	  		ps.setInt(1, temp_id); 
+  			ps.execute();
+	  		
+	  		
+	  		conn.commit();
+	  		
+	  		
+	  		while (rs_id.next()) {
+	  			id = rs_id.getInt("max(order_id)");
+	  		}
+	  		
+	  		
+	  		
+ 		} catch (Exception e) {
+ 			e.printStackTrace();
+ 			throw new Exception("Invalid Input");
+	  	}
+		return id;
+	}	
 
 	
 	@Override

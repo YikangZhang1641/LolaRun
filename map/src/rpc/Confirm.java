@@ -62,7 +62,9 @@ public class Confirm extends HttpServlet {
 			
 			String distance_text = input.getString("distance");
 			String duration_text = input.getString("duration");
-			double price = Double.parseDouble(input.getString("price"));	  		 
+			double price = Double.parseDouble(input.getString("price"));	 
+			
+			int temp_id = input.getInt("temp_id");
 	  		
 			OrderBuilder builder = new OrderBuilder();
 			builder.setUserID(user_id);
@@ -75,7 +77,7 @@ public class Confirm extends HttpServlet {
 			builder.setTimeStamp();
 			builder.setTrackStatus("OrderPlaced");
 			
-	  		int id = connection.saveOrder(builder.build());
+	  		int id = connection.saveOrder(builder.build(), temp_id);
 	  		
 	  		
 	  		JSONObject res = new JSONObject();
@@ -85,6 +87,7 @@ public class Confirm extends HttpServlet {
 	  		
 	  	 } catch (Exception e) {
 	  		 e.printStackTrace();
+	  		 response.getWriter().append(e.toString());
 	  	 } finally {
 	  		 connection.close();
 	  	 }
