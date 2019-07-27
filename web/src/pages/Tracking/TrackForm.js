@@ -3,7 +3,7 @@ import TextField from "@material-ui/core/TextField/TextField"
 import Button from "@material-ui/core/Button/Button"
 
 export default function TrackForm(props) {
-    const { trackingNumber, updateTrackingNumber,submitInput } = props;
+    const { trackingNumber, updateTrackingNumber,submitInput } = props;
     return (
         <React.Fragment>
             <div>
