@@ -6,14 +6,17 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import { Link } from "react-router-dom";
 import Typography from '@material-ui/core/Typography';
-import { SERVER_URL } from "../utils";
 import TrackStatus from './TrackStatus';
 import TrackForm from './TrackForm';
+import MapContainer from './Map'
 import { withAlert } from "react-alert";
+import Firebase from 'firebase'
+import config from './config'
 
-const TRACK_ENDPOINT = `${SERVER_URL}/track`;
 const companyName = 'LOLARun'
-
+if (!Firebase.apps.length) {
+        Firebase.initializeApp(config)
+ }
 const useStyles = theme => ({
     appBar: {
         position: 'relative',
@@ -59,6 +62,7 @@ class Track extends React.Component {
         trackResult: null,
         activeStep: 0,
     }
+
     updateTrackingNumber = (update = {}) => {
         this.setState({
             trackingNumber: update.trackingNumber
@@ -73,25 +77,16 @@ class Track extends React.Component {
             );
             return;
         }
-        fetch(TRACK_ENDPOINT + '?order_id='+ this.state.trackingNumber)
-            .then(response => {
-                if(response.ok){
-                    return response.json();
-                }
-                throw new Error("this is error");
+        let ref = Firebase.database().ref('/t1/' + this.state.trackingNumber )
+            ref.once('value', snapshot => {
+            
+            this.setState({
+                trackResult: snapshot.val().trackResult
+            });
+
+           this.setState(prevState => ({ activeStep: prevState.activeStep + 1 }));
+
             })
-            .then(response =>  {
-                    this.setState({trackResult: response});
-                    this.setState(prevState => ({ activeStep: prevState.activeStep + 1 }));
-                }
-            )
-            .catch(err =>{
-                    console.error(err);
-                    this.props.alert.error(
-                        "Oops,No Tracking Number in not in record"
-                    );
-            }
-            );
 
     }
 
@@ -107,7 +102,13 @@ class Track extends React.Component {
                     />
                 );
             case 1:
-                return <TrackStatus trackResult={trackResult} />;
+                return (
+                    <div>
+                        <TrackStatus trackingNumber={trackingNumber} trackResult={trackResult} />,
+                        <MapContainer containerElement={<div style={{ height: `600px`, width: `600px` }} />}
+                mapElement={<div style={{ height: `100%` }} />}trackingNumber={trackingNumber}/>
+                    </div>
+                )
             default:
                 throw new Error("Unknown step");
         }
@@ -140,6 +141,5 @@ class Track extends React.Component {
     }
 }
 
+
 export default withAlert()(withStyles(useStyles)(Track));
-
-
