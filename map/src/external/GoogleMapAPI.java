@@ -19,6 +19,7 @@ import entity.Route;
 import entity.Route.RouteBuilder;
 
 public class GoogleMapAPI {
+	private static final double k = 300;
 	private static final String URL = "https://maps.googleapis.com/maps/api/distancematrix";
 	private static final String DEFAULT_FORMAT = "json"; 
 //	private static final String DEFAULT_UNITS = "imperial"; 
@@ -113,6 +114,59 @@ public class GoogleMapAPI {
 		return routeList;
 	}
 	
+	private double[] latlng(String s) {
+		double[] res = new double[] {-1, -1};
+		String link = "https://maps.googleapis.com/maps/api/geocode/json?address=" + s + "&key=" + API_KEY;
+		
+		try {
+			HttpURLConnection connection;
+			connection = (HttpURLConnection) new URL(link).openConnection();
+			connection.setRequestMethod("GET");int responseCode = connection.getResponseCode();
+			System.out.println("Sending request to url: " + link);
+			System.out.println("Response code: " + responseCode);
+			
+			if (responseCode != 200) {
+				return res;
+			}
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String line;
+			StringBuilder response = new StringBuilder();
+			
+			while ((line = reader.readLine()) != null) {
+				response.append(line);
+			}
+			reader.close();
+			JSONObject obj = new JSONObject(response.toString());
+			JSONArray array = obj.getJSONArray("results");
+			JSONObject loc = array.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+			res[0] = loc.getDouble("lat");
+			res[1] = loc.getDouble("lng");
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
 	
+	
+	public double flightPrice(String origin, String destination) {
+		try {
+			origin = URLEncoder.encode(origin, "UTF-8");
+			destination = URLEncoder.encode(destination, "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+			
+		double[] ori_loc = latlng(origin);
+		double[] des_loc = latlng(destination);
+
+		double dis = Math.sqrt( Math.pow((ori_loc[0] - des_loc[0]), 2) + Math.pow((ori_loc[1] - des_loc[1]), 2) );
+		
+		return dis * k;
+	}
 	
 }

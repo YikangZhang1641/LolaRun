@@ -1,6 +1,7 @@
 package rpc;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -51,6 +52,7 @@ public class Quote extends HttpServlet {
 		GoogleMapAPI googleMapAPI = new GoogleMapAPI();
 		
 		List<Route> routes = googleMapAPI.search(origin, destination);
+		double filght_price = googleMapAPI.flightPrice(origin, destination);
 		if (routes.isEmpty()) {
 			response.setStatus(406);
 			response.getWriter().println("Address Not Available!");
@@ -63,9 +65,8 @@ public class Quote extends HttpServlet {
 				Robj.put("distance", r.getDistanceText());
 				Robj.put("duration", r.getDurationText());
 				
-				
 				Robj.put("robotType", "robot");
-				Robj.put("price", "123");
+				Robj.put("price", new DecimalFormat("#.##").format(r.getDistanceValue() * 0.001));
 				array.put(Robj);
 			}
 			for (Route r : routes) {
@@ -73,7 +74,7 @@ public class Quote extends HttpServlet {
 				Dobj.put("distance", r.getDistanceText());
 				Dobj.put("duration", r.getDurationText());
 				Dobj.put("robotType", "drone");
-				Dobj.put("price", "456");
+				Dobj.put("price", new DecimalFormat("#.##").format(filght_price));
 				array.put(Dobj);
 			}
 		} catch (JSONException e) {
