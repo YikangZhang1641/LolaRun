@@ -92,13 +92,13 @@ public class MySQLTableCreation {
 				
 				for (int i = 1; i <= 20; i++) {
 					String s = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-					sql = String.format("INSERT INTO robots VALUES('%d', 'drone', %b, '%d', 'origin', '%s', false)", i, i > 18, -1, s);
+					sql = String.format("INSERT INTO robots VALUES('%d', 'drone', %b, '%d', 'origin', '%s', false)", i, false, -1, s);
 					statement.executeUpdate(sql);
 				}
 				
 				for (int i = 21; i <= 40; i++) {
 					String s = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-					sql = String.format("INSERT INTO robots VALUES('%d', 'robot', %b, '%d', 'origin', '%s', false)", i, i > 38, -1, s);
+					sql = String.format("INSERT INTO robots VALUES('%d', 'robot', %b, '%d', 'origin', '%s', false)", i, false, -1, s);
 					statement.executeUpdate(sql);
 				}				
 				  

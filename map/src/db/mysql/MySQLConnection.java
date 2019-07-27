@@ -345,9 +345,9 @@ public class MySQLConnection implements DBConnection {
 			}
 			
 			// check if robot status valid
-			sql = "SELECT * from robots WHERE busy = false AND type = ?";
+			sql = "SELECT * from robots WHERE robot_id = (SELECT robot_id FROM orders WHERE order_id = ?)";
 			statement = conn.prepareStatement(sql);
-			statement.setString(1, type);
+			statement.setInt(1, order_id);
 			rs = statement.executeQuery();
 
 			while (rs.next()) {
@@ -402,9 +402,9 @@ public class MySQLConnection implements DBConnection {
 			}
 			
 			// check if robot status valid
-			sql = "SELECT * from robots WHERE robot_id = ?";
+			sql = "SELECT * from robots WHERE robot_id = (SELECT robot_id FROM orders WHERE order_id = ?)";
 			statement = conn.prepareStatement(sql);
-			statement.setInt(1, robot_id);
+			statement.setInt(1, order_id);
 			rs = statement.executeQuery();
 
 			int check_id = -1;
@@ -516,9 +516,9 @@ public class MySQLConnection implements DBConnection {
 			}
 			
 			// check if robot status valid
-			sql = "SELECT * from robots WHERE robot_id = ?";
+			sql = "SELECT * from robots WHERE robot_id = (SELECT robot_id FROM orders WHERE order_id = ?)";
 			statement = conn.prepareStatement(sql);
-			statement.setInt(1, robot_id);
+			statement.setInt(1, order_id);
 			rs = statement.executeQuery();
 
 			int check_id = -1;
