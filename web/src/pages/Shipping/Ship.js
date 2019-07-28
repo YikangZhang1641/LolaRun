@@ -81,7 +81,11 @@ class Ship extends React.Component {
     shippingOptions: [],
     selectedOptions: null,
     orderId: null,
-    redirect: false
+    tempId: null,
+    noDrone: false,
+    noRobot: false,
+    redirect: false,
+    error: false
   };
 
   setSelectedOptions = selectedOptions => {
@@ -130,7 +134,7 @@ class Ship extends React.Component {
             }
           })
           .then(response => {
-            this.setState({ shippingOptions: response.data });
+              this.setState({ shippingOptions: response.data });
           })
           .catch(error => {
             this.props.alert.error(
@@ -141,6 +145,15 @@ class Ship extends React.Component {
           });
         break;
       case 1:
+        // console.log(this.state.selectedOptions.robotType);
+        // console.log(this.state.tempId);
+        if ( (this.state.selectedOptions.robotType === "drone" && this.state.noDrone) 
+          || (this.state.selectedOptions.robotType === "robot" && this.state.noRobot) ) {
+          this.props.alert.error(
+            "Oops, not avaiable, Please choose another way"
+          );
+          this.setState({ error: true });
+        } 
         break;
       case 2:
         const payload = {
@@ -159,8 +172,10 @@ class Ship extends React.Component {
           robotType: this.state.selectedOptions.robotType,
           distance: this.state.selectedOptions.distance,
           duration: this.state.selectedOptions.duration,
-          price: this.state.selectedOptions.price
+          price: this.state.selectedOptions.price,
+          temp_id: this.state.tempId,
         };
+        //console.log(payload);
         axios
           .post(COMFIRM_ENDPOINT, payload, {
             headers: {
@@ -191,7 +206,8 @@ class Ship extends React.Component {
   handleBack = () => {
     this.setState(prevState => ({
       activeStep: prevState.activeStep - 1,
-      selectedOptions: null
+      selectedOptions: [],
+      error: false
     }));
   };
 
@@ -199,11 +215,19 @@ class Ship extends React.Component {
         axios
           .get(CHECK_ENDPOINT)
           .then(response => {
-            if (!response.data.drone_available && ! response.data.robot_available) {
+            if (response.data.drone_id === -1 && response.data.robot_id === -1) {
               this.props.alert.info(
                 "Not available robot. Please try next time"
               );
               this.setState({ redirect: true });
+            } else {
+              if (response.data.drone_id === -1) {
+                this.setState({noDrone: true});
+              }
+              if (response.data.robot_id === -1) {
+                this.setState({noRobot: true});
+              } 
+              this.setState({tempId: response.data.temp_id});
             }
           })
           .catch(error => {
@@ -271,6 +295,11 @@ class Ship extends React.Component {
         break;
       case 1:
         if (selectedOptions === null) {
+          isNextButtonDisabled = true;
+        }
+        break;
+      case 2: 
+        if (this.state.error === true) {
           isNextButtonDisabled = true;
         }
         break;
